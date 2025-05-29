@@ -118,18 +118,57 @@ const Home: React.FC = () => {
       </section>
 
       {/* Stats Section */}
-      <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat: StatData, index: number) => (
-          <Card key={stat.id || index} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300 border-0 bg-white">
-            <CardContent className="pt-6 flex flex-col items-center">
-              <div className="p-3 bg-blue-100 rounded-full mb-4">
-                {stat.icon}
-              </div>
-              <h3 className="text-2xl font-bold text-gray-800">{stat.value}</h3>
-              <p className="text-gray-600 text-sm">{t(stat.label)}</p>
-            </CardContent>
-          </Card>
-        ))}
+      <section className="relative">
+        <div className="text-center mb-12">
+          <Badge variant="outline" className="mb-4 px-4 py-2 text-sm font-medium bg-gradient-to-r from-blue-50 to-purple-50 border-blue-200">
+            <TrendingUp className="w-4 h-4 mr-2" />
+            Nossos Números
+          </Badge>
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Crescendo Juntos</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Cada número representa uma história, uma conexão, uma experiência compartilhada em nossa comunidade.</p>
+        </div>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {stats.map((stat: StatData, index: number) => {
+            const icons = [Users, Calendar, Award];
+            const gradients = [
+              'from-blue-500 to-blue-600',
+              'from-purple-500 to-purple-600', 
+              'from-pink-500 to-pink-600'
+            ];
+            const IconComponent = icons[index % icons.length];
+            const gradient = gradients[index % gradients.length];
+            
+            return (
+              <Card key={stat.id || index} className="relative overflow-hidden group hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 bg-white border-0 shadow-lg">
+                {/* Background Gradient */}
+                <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500`}></div>
+                
+                <CardContent className="relative p-8 text-center">
+                  {/* Icon */}
+                  <div className={`w-16 h-16 bg-gradient-to-br ${gradient} rounded-2xl flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300`}>
+                    <IconComponent className="w-8 h-8 text-white" />
+                  </div>
+                  
+                  {/* Value */}
+                  <div className="text-4xl md:text-5xl font-bold text-gray-900 mb-3 group-hover:scale-105 transition-transform duration-300">
+                    {stat.value}
+                  </div>
+                  
+                  {/* Label */}
+                  <div className="text-gray-600 font-medium text-lg">
+                    {t(stat.label)}
+                  </div>
+                  
+                  {/* Decorative Element */}
+                  <div className="absolute top-4 right-4 opacity-10 group-hover:opacity-20 transition-opacity duration-300">
+                    <Star className="w-6 h-6 text-gray-400" />
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </section>
 
       {/* Upcoming Events */}
