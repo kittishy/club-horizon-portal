@@ -30,4 +30,15 @@ export const EditProfileSchema = z.object({
   // email: z.string().email({ message: "validation.email.invalid" }).min(1, { message: "validation.email.required" }),
 });
 
-export type EditProfileFormData = z.infer<typeof EditProfileSchema>; 
+export type EditProfileFormData = z.infer<typeof EditProfileSchema>;
+
+export const ChangePasswordSchema = z.object({
+  currentPassword: z.string().min(1, { message: "validation.currentPassword.required" }),
+  newPassword: z.string().min(8, { message: "validation.newPassword.minLength:8" }), // Mínimo 8 caracteres
+  confirmNewPassword: z.string().min(1, { message: "validation.confirmNewPassword.required" }),
+}).refine((data) => data.newPassword === data.confirmNewPassword, {
+  message: "validation.newPasswordMismatch",
+  path: ["confirmNewPassword"],
+});
+
+export type ChangePasswordFormData = z.infer<typeof ChangePasswordSchema>; 

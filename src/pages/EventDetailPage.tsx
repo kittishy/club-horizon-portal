@@ -10,6 +10,7 @@ import { useEventDetailData } from '@/hooks/useEventDetailData.tsx';
 import { I18nEventData } from '@/types'; // Supondo que I18nEventData esteja em @/types
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { formatDateForLocale } from '@/lib/dateUtils'; // Importar helper
 
 const EventDetailPage: React.FC = () => {
   const { eventId } = useParams<{ eventId: string }>();
@@ -17,18 +18,19 @@ const EventDetailPage: React.FC = () => {
   const navigate = useNavigate();
   const { event, isLoading, isError, error } = useEventDetailData(eventId);
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(i18n.language, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
+  const formatTime = (timeString: string | undefined): string => {
+    if (!timeString) return 'N/A'; // Lidar com tempo indefinido
+    // O campo 'time' no db.json é "HH:mm". O construtor Date precisa de uma data completa.
+    // Vamos criar uma data dummy apenas para usar toLocaleTimeString
+    // Isso não é ideal, se pudéssemos obter a data/hora completas do backend seria melhor.
+    const today = new Date();
+    const [hours, minutes] = timeString.split(':');
+    today.setHours(parseInt(hours, 10), parseInt(minutes, 10), 0, 0);
 
-  const formatTime = (dateString: string) => {
-    return new Date(dateString).toLocaleTimeString(i18n.language, {
+    return today.toLocaleTimeString(i18n.language, {
       hour: '2-digit',
       minute: '2-digit',
+      hour12: false // Usar formato 24h ou adaptar conforme preferência
     });
   };
 
@@ -88,7 +90,7 @@ const EventDetailPage: React.FC = () => {
               <CalendarDays size={18} className="mr-2.5 mt-0.5 text-blue-600 flex-shrink-0" />
               <div>
                 <strong className="text-gray-600">{t('eventDetailPage.dateLabel')}</strong>
-                <p className="text-gray-800">{formatDate(event.date)}</p>
+                <p className="text-gray-800">{formatDateForLocale(event.date, i18n, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
               </div>
             </div>
 

@@ -8,18 +8,11 @@ import { useHomeData } from '@/hooks/useHomeData.tsx';
 import { useTranslation } from 'react-i18next';
 import { StatData, I18nHomePageUpcomingEvent, I18nHomePageRecentNews } from '@/types';
 import PageLoader from '@/components/PageLoader';
+import { formatDateForLocale } from '@/lib/dateUtils';
 
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
   const { upcomingEvents, recentNews, stats, isLoading, isError, error } = useHomeData();
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString + 'T00:00:00').toLocaleDateString(i18n.language, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   if (isLoading) {
     return <PageLoader />;
@@ -222,7 +215,7 @@ const Home: React.FC = () => {
                   <div className="space-y-3">
                     <div className="flex items-center text-gray-600 bg-gray-50 rounded-lg p-3">
                       <Calendar className="h-5 w-5 mr-3 text-blue-500" />
-                      <span className="font-medium">{formatDate(event.date)}</span>
+                      <span className="font-medium">{formatDateForLocale(event.date, i18n, { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                     </div>
                     <div className="flex items-center text-gray-600 bg-gray-50 rounded-lg p-3">
                       <Clock className="h-5 w-5 mr-3 text-purple-500" />
@@ -297,7 +290,7 @@ const Home: React.FC = () => {
                       <Sparkles className="w-5 h-5 text-white" />
                     </div>
                     <Badge variant="secondary" className="text-xs font-medium bg-gray-100 text-gray-600">
-                      {formatDate(news.date)}
+                      {formatDateForLocale(news.date, i18n, { year: 'numeric', month: 'long', day: 'numeric' })}
                     </Badge>
                   </div>
                   <CardTitle className="text-xl font-bold text-gray-900 group-hover:text-gray-700 transition-colors duration-300 leading-tight">

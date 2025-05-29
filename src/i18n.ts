@@ -273,6 +273,7 @@ const resources = {
       "userProfile.memberIdLabel": "Member ID:",
       "userProfile.registrationDateLabel": "Registration Date:",
       "userRole.admin": "Administrator",
+      "userProfile.changePasswordButton": "Change Password",
 
       // API Error Messages
       "apiError.login.fetchUsersFailed": "System error during login. Please try again later.", // Failed to fetch users for login simulation
@@ -282,7 +283,27 @@ const resources = {
       "apiError.register.genericFailed": "Registration could not be completed. Please try again.", // Failed to register user
       "apiError.profile.fetchUserFailed": "Could not load user data for update. Please try again.", // Failed to fetch user for update
       "apiError.profile.notAuthenticated": "You must be logged in to update your profile.", // User not authenticated
-      "apiError.profile.updateFailed": "Failed to save profile changes to the server. Please try again." // Failed to update user profile on the server
+      "apiError.profile.updateFailed": "Failed to save profile changes to the server. Please try again.", // Failed to update user profile on the server
+
+      // Change Password Page
+      "changePassword.title": "Change Password",
+      "changePassword.currentPasswordLabel": "Current Password",
+      "changePassword.currentPasswordPlaceholder": "Enter your current password",
+      "changePassword.newPasswordLabel": "New Password",
+      "changePassword.newPasswordPlaceholder": "Enter your new password",
+      "changePassword.confirmNewPasswordLabel": "Confirm New Password",
+      "changePassword.confirmNewPasswordPlaceholder": "Confirm your new password",
+      "changePassword.saveButton": "Change Password",
+      "changePassword.success": "Password changed successfully!",
+      "changePassword.error": "Failed to change password. Please try again.",
+      "validation.currentPassword.required": "Current password is required.",
+      "validation.newPassword.required": "New password is required.",
+      "validation.newPassword.minLength:8": "New password must be at least 8 characters long.", // Exemplo de validação mais forte
+      "validation.confirmNewPassword.required": "Confirm new password is required.",
+      "validation.newPasswordMismatch": "New passwords do not match.",
+      "changePassword.subtitle": "Update your account password to keep it secure.",
+      "apiError.changePassword.currentPasswordIncorrect": "The current password entered is incorrect.",
+      "apiError.changePassword.generic": "An unexpected error occurred while changing your password."
     }
   },
   pt: {
@@ -553,6 +574,7 @@ const resources = {
       "userProfile.memberIdLabel": "ID de Membro:",
       "userProfile.registrationDateLabel": "Data de Registro:",
       "userRole.admin": "Administrador",
+      "userProfile.changePasswordButton": "Alterar Senha",
 
       // API Error Messages
       "apiError.login.fetchUsersFailed": "Erro de sistema durante o login. Por favor, tente mais tarde.",
@@ -562,7 +584,27 @@ const resources = {
       "apiError.register.genericFailed": "Não foi possível completar o registro. Por favor, tente novamente.",
       "apiError.profile.fetchUserFailed": "Não foi possível carregar os dados do usuário para atualização. Tente novamente.",
       "apiError.profile.notAuthenticated": "Você precisa estar logado para atualizar seu perfil.",
-      "apiError.profile.updateFailed": "Falha ao salvar as alterações do perfil no servidor. Tente novamente."
+      "apiError.profile.updateFailed": "Falha ao salvar as alterações do perfil no servidor. Tente novamente.",
+
+      // Change Password Page
+      "changePassword.title": "Alterar Senha",
+      "changePassword.currentPasswordLabel": "Senha Atual",
+      "changePassword.currentPasswordPlaceholder": "Digite sua senha atual",
+      "changePassword.newPasswordLabel": "Nova Senha",
+      "changePassword.newPasswordPlaceholder": "Digite sua nova senha",
+      "changePassword.confirmNewPasswordLabel": "Confirmar Nova Senha",
+      "changePassword.confirmNewPasswordPlaceholder": "Confirme sua nova senha",
+      "changePassword.saveButton": "Alterar Senha",
+      "changePassword.success": "Senha alterada com sucesso!",
+      "changePassword.error": "Falha ao alterar a senha. Por favor, tente novamente.",
+      "validation.currentPassword.required": "A senha atual é obrigatória.",
+      "validation.newPassword.required": "A nova senha é obrigatória.",
+      "validation.newPassword.minLength:8": "A nova senha deve ter pelo menos 8 caracteres.",
+      "validation.confirmNewPassword.required": "A confirmação da nova senha é obrigatória.",
+      "validation.newPasswordMismatch": "As novas senhas não coincidem.",
+      "changePassword.subtitle": "Atualize a senha da sua conta para mantê-la segura.",
+      "apiError.changePassword.currentPasswordIncorrect": "A senha atual informada está incorreta.",
+      "apiError.changePassword.generic": "Ocorreu um erro inesperado ao alterar sua senha."
     }
   }
 };

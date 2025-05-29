@@ -20,6 +20,7 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const UserProfilePage = lazy(() => import('./pages/UserProfilePage'));
+const ChangePasswordPage = lazy(() => import('./pages/ChangePasswordPage'));
 const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
@@ -43,6 +44,7 @@ const AppContent: React.FC = () => {
           <Route path="contato" element={<ContactPage />} />
           <Route element={<ProtectedRoute />}>
             <Route path="perfil" element={<UserProfilePage />} />
+            <Route path="perfil/alterar-senha" element={<ChangePasswordPage />} />
             <Route element={<AdminRoute />}>
               <Route path="admin/dashboard" element={<AdminDashboardPage />} />
             </Route>

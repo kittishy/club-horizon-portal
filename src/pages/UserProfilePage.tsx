@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
-import { UserCircle, Mail, ShieldCheck, Calendar as CalendarIcon, Edit3, XCircle } from 'lucide-react';
+import { UserCircle, Mail, ShieldCheck, Calendar as CalendarIcon, Edit3, XCircle, LockKeyhole } from 'lucide-react';
 import PageLoader from '@/components/PageLoader';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -14,6 +14,7 @@ import { useUpdateUserProfile } from '@/hooks/auth';
 import { toast } from 'sonner';
 import { formatDateForLocale } from '@/lib/dateUtils';
 import i18n from '@/i18n';
+import { Link } from 'react-router-dom';
 
 const UserProfilePage: React.FC = () => {
   const { t } = useTranslation();
@@ -171,6 +172,16 @@ const UserProfilePage: React.FC = () => {
               <div className="flex items-center">
                 <ShieldCheck className="h-5 w-5 mr-3 text-gray-500" />
                 <span className="text-gray-700">{t('userProfile.accountType', { type: t(userRoleKey) })}</span>
+              </div>
+
+              {/* Botão Alterar Senha */}
+              <div className="pt-6 border-t mt-6">
+                <Button asChild variant="outline" className="w-full md:w-auto">
+                  <Link to="/perfil/alterar-senha">
+                    <LockKeyhole size={16} className="mr-2" />
+                    {t('userProfile.changePasswordButton')}
+                  </Link>
+                </Button>
               </div>
             </div>
           )}

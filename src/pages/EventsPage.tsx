@@ -13,6 +13,7 @@ import { Button } from '@/components/ui/button'; // Adicionado Button
 import PaginationControls from '@/components/ui/PaginationControls'; // Importar PaginationControls
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
+import { formatDateForLocale } from '@/lib/dateUtils'; // Importar helper
 
 // A interface I18nEventData foi movida para @/types
 // Esta seção pode ser removida.
@@ -33,12 +34,11 @@ interface I18nEventData {
 */
 
 interface EventCardProps {
-  event: I18nEventData; // Usar o tipo importado
-  formatDate: (dateString: string) => string;
+  event: I18nEventData; 
 }
 
-const EventCard: React.FC<EventCardProps> = React.memo(({ event, formatDate }) => {
-  const { t } = useTranslation();
+const EventCard: React.FC<EventCardProps> = React.memo(({ event }) => {
+  const { t, i18n } = useTranslation();
 
   const getStatusBadgeVariant = (statusKey: string) => {
     if (statusKey === 'event.status.Lotado' || statusKey === 'event.status.Cancelado') return "destructive";
@@ -82,7 +82,7 @@ const EventCard: React.FC<EventCardProps> = React.memo(({ event, formatDate }) =
       </CardHeader>
       <CardContent className="flex-grow space-y-3 text-sm">
         <div className="flex items-center text-gray-700">
-          <CalendarDays size={16} className="mr-2 text-blue-500" /> {formatDate(event.date)}
+          <CalendarDays size={16} className="mr-2 text-blue-500" /> {formatDateForLocale(event.date, i18n, { year: 'numeric', month: 'long', day: 'numeric' })}
         </div>
         <div className="flex items-center text-gray-700">
           <Clock size={16} className="mr-2 text-blue-500" /> {event.time}
@@ -138,7 +138,7 @@ const eventSortOptions: { labelKey: string, value: EventSortOptions }[] = [
 ];
 
 const EventsPage: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { t, i18n: i18nPageScope } = useTranslation();
   const [currentPage, setCurrentPage] = useState(1);
   const [filters, setFilters] = useState<EventFilters>({});
   const [currentSort, setCurrentSort] = useState<EventSortOptions>(eventSortOptions[0].value);
@@ -168,12 +168,6 @@ const EventsPage: React.FC = () => {
     setCurrentPage(1);
   };
   
-  const formatDate = (dateString: string) => {
-    return new Date(dateString + 'T00:00:00').toLocaleDateString(i18n.language, {
-      year: 'numeric', month: 'long', day: 'numeric',
-    });
-  };
-
   const categorySelectOptions = useMemo(() => eventCategories.map(catKey => (
     <SelectItem key={catKey} value={catKey}>{t(catKey)}</SelectItem>
   )), [t]);
@@ -265,8 +259,8 @@ const EventsPage: React.FC = () => {
       {events && events.length > 0 && (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((event: I18nEventData) => 
-              <EventCard key={event.id} event={event} formatDate={formatDate} />
+            {events.map((eventItem: I18nEventData) => 
+              <EventCard key={eventItem.id} event={eventItem} />
             )}
           </div>
           {totalPages && totalPages > 1 && (

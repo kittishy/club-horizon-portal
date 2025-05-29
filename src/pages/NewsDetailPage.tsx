@@ -10,20 +10,13 @@ import { I18nNewsArticleData } from '@/types';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { useNewsDetailData } from '@/hooks/useNewsDetailData.tsx';
+import { formatDateForLocale } from '@/lib/dateUtils';
 
 const NewsDetailPage: React.FC = () => {
   const { newsId } = useParams<{ newsId: string }>();
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { article, isLoading, isError, error } = useNewsDetailData(newsId);
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString + 'T00:00:00').toLocaleDateString(i18n.language, {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-    });
-  };
 
   if (isLoading) {
     return <PageLoader />;
@@ -73,7 +66,7 @@ const NewsDetailPage: React.FC = () => {
           <div className="flex flex-wrap items-center text-sm text-gray-500 mt-3 space-x-4">
             <div className="flex items-center">
               <CalendarDays size={16} className="mr-1.5" />
-              {formatDate(article.date)}
+              {formatDateForLocale(article.date, i18n, { year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
             <div className="flex items-center">
               <Tag size={16} className="mr-1.5" />
