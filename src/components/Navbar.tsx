@@ -1,9 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { NavItem } from '@/types';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, Calendar, Users, Newspaper, Phone, Home as HomeIcon } from 'lucide-react';
+import { Menu, X, Calendar, Users, Newspaper, Phone, Home as HomeIcon, LogIn, LogOut, UserCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/contexts/AuthContext';
+import { useLogout } from '@/hooks/auth';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const navItemsData: NavItem[] = [
   { name: 'Home', path: '/', icon: <HomeIcon size={18} /> },
@@ -16,8 +26,11 @@ const navItemsData: NavItem[] = [
 const Navbar: React.FC = React.memo(() => {
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
+  const { currentUser, isLoading: authLoading } = useAuth();
+  const { logout } = useLogout();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -34,6 +47,71 @@ const Navbar: React.FC = React.memo(() => {
 
   const isActivePath = (path: string) => {
     return location.pathname === path;
+  };
+
+  const handleLogout = async () => {
+    await logout();
+    setIsMenuOpen(false);
+    navigate('/');
+  };
+
+  const renderAuthSection = (isMobile: boolean) => {
+    if (authLoading) {
+      return <div className={`h-8 w-20 rounded-md bg-gray-200 animate-pulse ${isMobile ? 'w-full mt-2' : ''}`}></div>;
+    }
+
+    if (currentUser) {
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button 
+              variant="ghost" 
+              className={`flex items-center space-x-2 p-2 hover:bg-gray-100 rounded-full transition-colors duration-300 ${
+                isMobile ? 'w-full justify-start text-gray-700' : 'text-gray-700'
+              }`}
+            >
+              <UserCircle size={isMobile ? 20 : 24} />
+              {!isMobile && <span className="text-sm font-medium truncate max-w-[100px]">{currentUser.name}</span>}
+              {isMobile && <span className="text-sm font-medium">{t('auth.myProfile')} / {t('auth.logoutButton')}</span>}
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align={isMobile ? 'start' : 'end'} className="w-56">
+            <DropdownMenuLabel className="truncate">{t('auth.welcomeUser', { name: currentUser.name })}</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} className="text-red-600 hover:!text-red-600 hover:!bg-red-50 focus:!bg-red-50 focus:!text-red-600 cursor-pointer">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>{t('auth.logoutButton')}</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    }
+
+    return (
+      <div className={`flex items-center ${isMobile ? 'flex-col space-y-2 w-full' : 'space-x-3'}`}>
+        <Button 
+          asChild 
+          variant="outline" 
+          size="sm" 
+          className={`border-gray-300 hover:border-gray-400 hover:bg-gray-50 transition-all duration-300 ${isMobile ? 'w-full justify-center' : ''}`}
+          onClick={() => setIsMenuOpen(false)}
+        >
+          <Link to="/login" className="flex items-center">
+            <LogIn size={16} className="mr-1.5" /> {t('auth.loginButton')}
+          </Link>
+        </Button>
+        <Button 
+          asChild 
+          size="sm" 
+          className={`bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow hover:shadow-md transition-all duration-300 hover:scale-105 ${isMobile ? 'w-full justify-center' : ''}`}
+          onClick={() => setIsMenuOpen(false)}
+        >
+          <Link to="/registro">
+            {t('auth.registerButton')}
+          </Link>
+        </Button>
+      </div>
+    );
   };
 
   return (
@@ -85,25 +163,21 @@ const Navbar: React.FC = React.memo(() => {
             })}
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:flex items-center space-x-3">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="border-gray-200 hover:border-gray-300 hover:bg-gray-50 transition-all duration-300"
-            >
-              Entrar
-            </Button>
-            <Button 
-              size="sm" 
-              className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
-            >
-              Associe-se
-            </Button>
+          {/* Auth Section - Desktop */}
+          <div className="hidden lg:flex items-center">
+            {renderAuthSection(false)}
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="lg:hidden">
+          <div className="lg:hidden flex items-center">
+            {!isMenuOpen && !currentUser && !authLoading && (
+                <Button asChild variant="ghost" size="sm" className="mr-2 p-1.5" onClick={() => setIsMenuOpen(false)}>
+                    <Link to="/login"><LogIn size={20}/></Link>
+                </Button>
+            )}
+            {currentUser && !authLoading && (
+                 <div className="mr-2">{renderAuthSection(true)}</div>
+            )}
             <Button
               variant="ghost"
               size="sm"
@@ -141,20 +215,8 @@ const Navbar: React.FC = React.memo(() => {
                   </Link>
                 );
               })}
-              <div className="pt-4 border-t border-gray-100 space-y-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="w-full justify-center border-gray-200 hover:border-gray-300 hover:bg-gray-50"
-                >
-                  Entrar
-                </Button>
-                <Button 
-                  size="sm" 
-                  className="w-full justify-center bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                >
-                  Associe-se
-                </Button>
+              <div className="pt-4 border-t border-gray-100 px-4">
+                {renderAuthSection(true)}
               </div>
             </div>
           </div>
