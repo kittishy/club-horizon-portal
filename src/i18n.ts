@@ -222,7 +222,30 @@ const resources = {
       "sort.titleAsc": "Title (A-Z)",
       "sort.titleDesc": "Title (Z-A)",
       "sort.participantsDesc": "Participants (Most)",
-      "sort.participantsAsc": "Participants (Fewest)"
+      "sort.participantsAsc": "Participants (Fewest)",
+
+      // Authentication & User
+      "auth.loginTitle": "Login",
+      "auth.loginButton": "Login",
+      "auth.logoutButton": "Logout",
+      "auth.registerTitle": "Register",
+      "auth.registerButton": "Register",
+      "auth.emailLabel": "Email",
+      "auth.emailPlaceholder": "your.email@example.com",
+      "auth.passwordLabel": "Password",
+      "auth.passwordPlaceholder": "Enter your password",
+      "auth.confirmPasswordLabel": "Confirm Password",
+      "auth.confirmPasswordPlaceholder": "Confirm your password",
+      "auth.alreadyHaveAccount": "Already have an account? Login",
+      "auth.dontHaveAccount": "Don't have an account? Register",
+      "auth.loginSuccess": "Login successful!",
+      "auth.loginError": "Login failed. Please check your credentials.",
+      "auth.registrationSuccess": "Registration successful! You can now log in.",
+      "auth.registrationError": "Registration failed. Please try again.",
+      "auth.passwordMismatch": "Passwords do not match.",
+      "auth.welcomeUser": "Welcome, {{name}}!",
+      "auth.myProfile": "My Profile",
+      "auth.notLoggedIn": "You are not logged in."
     }
   },
   pt: {
@@ -442,7 +465,30 @@ const resources = {
       "sort.titleAsc": "Título (A-Z)",
       "sort.titleDesc": "Título (Z-A)",
       "sort.participantsDesc": "Participantes (Mais)",
-      "sort.participantsAsc": "Participantes (Menos)"
+      "sort.participantsAsc": "Participantes (Menos)",
+
+      // Authentication & User
+      "auth.loginTitle": "Entrar",
+      "auth.loginButton": "Entrar",
+      "auth.logoutButton": "Sair",
+      "auth.registerTitle": "Registrar",
+      "auth.registerButton": "Registrar",
+      "auth.emailLabel": "Email",
+      "auth.emailPlaceholder": "seu.email@exemplo.com.br",
+      "auth.passwordLabel": "Senha",
+      "auth.passwordPlaceholder": "Digite sua senha",
+      "auth.confirmPasswordLabel": "Confirmar Senha",
+      "auth.confirmPasswordPlaceholder": "Confirme sua senha",
+      "auth.alreadyHaveAccount": "Já tem uma conta? Entre",
+      "auth.dontHaveAccount": "Não tem uma conta? Registre-se",
+      "auth.loginSuccess": "Login realizado com sucesso!",
+      "auth.loginError": "Falha no login. Verifique suas credenciais.",
+      "auth.registrationSuccess": "Registro realizado com sucesso! Você já pode fazer login.",
+      "auth.registrationError": "Falha no registro. Por favor, tente novamente.",
+      "auth.passwordMismatch": "As senhas não coincidem.",
+      "auth.welcomeUser": "Bem-vindo(a), {{name}}!",
+      "auth.myProfile": "Meu Perfil",
+      "auth.notLoggedIn": "Você não está logado."
     }
   }
 };

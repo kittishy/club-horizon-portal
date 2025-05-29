@@ -147,3 +147,12 @@ export interface I18nCalendarEventData extends Omit<CalendarEventData, 'title' |
     locationKey?: string;
     categoryKey?: string;
 }
+
+// User Data
+export interface UserData {
+  id: string;
+  name: string;
+  email: string;
+  // Adicionar mais campos conforme necessário, e.g., role, memberSince, etc.
+  // A senha NUNCA deve ser armazenada aqui ou retornada pela API no frontend.
+}
