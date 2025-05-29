@@ -7,9 +7,33 @@ export interface PaginatedEventsResponse {
   totalPages: number;
 }
 
-const fetchEventsData = async (page: number, limit: number): Promise<PaginatedEventsResponse> => {
-  // Adicionando ordenação por data, mais recentes primeiro
-  const response = await fetch(`http://localhost:3001/events?_page=${page}&_limit=${limit}&_sort=date&_order=desc`);
+export interface EventSortOptions {
+  field: 'date' | 'titleKey' | 'participants.count'; // Campos de ordenação para eventos
+  order: 'asc' | 'desc';
+}
+
+export interface EventFilters {
+  categoryKey?: string;
+  statusKey?: string;
+}
+
+const fetchEventsData = async (
+  page: number, 
+  limit: number, 
+  sort: EventSortOptions, 
+  filters: EventFilters
+): Promise<PaginatedEventsResponse> => {
+  let url = `http://localhost:3001/events?_page=${page}&_limit=${limit}`;
+  url += `&_sort=${sort.field}&_order=${sort.order}`;
+
+  if (filters.categoryKey) {
+    url += `&categoryKey=${encodeURIComponent(filters.categoryKey)}`;
+  }
+  if (filters.statusKey) {
+    url += `&statusKey=${encodeURIComponent(filters.statusKey)}`;
+  }
+
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error('Network response was not ok when fetching events data');
   }
@@ -22,16 +46,21 @@ const fetchEventsData = async (page: number, limit: number): Promise<PaginatedEv
   };
 };
 
-export const useEventsData = (page: number, limit: number) => {
+export const useEventsData = (
+  page: number, 
+  limit: number, 
+  sort: EventSortOptions, 
+  filters: EventFilters
+) => {
   const {
     data,
     isLoading,
     isError,
     error,
   } = useQuery<PaginatedEventsResponse, Error>({
-    queryKey: ['eventsData', page, limit], // Inclui page e limit na queryKey
-    queryFn: () => fetchEventsData(page, limit),
-    keepPreviousData: true, // Mantém os dados anteriores enquanto novos são carregados
+    queryKey: ['eventsData', page, limit, sort, filters], // Adicionar sort e filters
+    queryFn: () => fetchEventsData(page, limit, sort, filters),
+    keepPreviousData: true,
   });
 
   return {

@@ -47,20 +47,73 @@ const Home: React.FC = () => {
   }
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-16">
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-blue-700 to-blue-500 text-white py-20 rounded-lg shadow-xl text-center">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6">{t('home.welcome')}</h1>
-        <p className="text-lg md:text-xl mb-8 max-w-2xl mx-auto px-4">
-          {t('home.heroSubtitle')}
-        </p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Button asChild size="lg" className="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-semibold">
-            <Link to="/eventos">{t('home.upcomingEventsLink')}</Link>
-          </Button>
-          <Button asChild variant="outline" size="lg" className="bg-white text-blue-700 hover:bg-gray-100 border-blue-700 font-semibold">
-            <Link to="/contato">{t('home.joinUsLink')}</Link>
-          </Button>
+      <section className="relative overflow-hidden">
+        {/* Background Elements */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 -z-10"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-400/20 to-purple-400/20 rounded-full blur-3xl -z-10"></div>
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-pink-400/20 to-blue-400/20 rounded-full blur-3xl -z-10"></div>
+        
+        <div className="container mx-auto px-4 py-24 text-center">
+          {/* Welcome Badge */}
+          <div className="inline-flex items-center space-x-2 bg-white/80 backdrop-blur-sm border border-blue-200 rounded-full px-6 py-2 mb-8 shadow-lg">
+            <Sparkles className="w-4 h-4 text-blue-600" />
+            <span className="text-sm font-medium text-blue-700">Bem-vindos ao Clube Harmonia</span>
+            <Heart className="w-4 h-4 text-pink-500 fill-current" />
+          </div>
+          
+          {/* Main Heading */}
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-blue-700 via-purple-600 to-pink-600 bg-clip-text text-transparent leading-tight">
+            {t('home.welcome')}
+          </h1>
+          
+          {/* Subtitle */}
+          <p className="text-xl md:text-2xl mb-12 max-w-3xl mx-auto px-4 text-gray-700 leading-relaxed">
+            {t('home.heroSubtitle')}
+          </p>
+          
+          {/* CTA Buttons */}
+          <div className="flex flex-col sm:flex-row justify-center gap-4 mb-16">
+            <Button asChild size="lg" className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105">
+              <Link to="/eventos">
+                <Calendar className="w-5 h-5 mr-2" />
+                {t('home.upcomingEventsLink')}
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg" className="bg-white/80 backdrop-blur-sm text-blue-700 hover:bg-white border-2 border-blue-200 hover:border-blue-300 font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300">
+              <Link to="/contato">
+                <Users className="w-5 h-5 mr-2" />
+                {t('home.joinUsLink')}
+              </Link>
+            </Button>
+          </div>
+          
+          {/* Hero Image/Illustration */}
+          <div className="relative max-w-4xl mx-auto">
+            <div className="bg-white/60 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/50">
+              <div className="grid grid-cols-3 gap-6 items-center">
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <Users className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-700">Comunidade Ativa</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <Calendar className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-700">Eventos Regulares</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-16 h-16 bg-gradient-to-br from-pink-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-lg">
+                    <Award className="w-8 h-8 text-white" />
+                  </div>
+                  <p className="text-sm font-medium text-gray-700">Experiências Únicas</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

@@ -7,8 +7,25 @@ export interface PaginatedNewsResponse {
   totalPages: number;
 }
 
-const fetchNewsData = async (page: number, limit: number): Promise<PaginatedNewsResponse> => {
-  const response = await fetch(`http://localhost:3001/news?_page=${page}&_limit=${limit}&_sort=date&_order=desc`);
+export interface NewsSortOptions {
+  field: 'date' | 'titleKey'; // Campos de ordenação para notícias
+  order: 'asc' | 'desc';
+}
+
+const fetchNewsData = async (
+  page: number, 
+  limit: number, 
+  sort: NewsSortOptions, 
+  categoryFilter?: string
+): Promise<PaginatedNewsResponse> => {
+  let url = `http://localhost:3001/news?_page=${page}&_limit=${limit}`;
+  url += `&_sort=${sort.field}&_order=${sort.order}`;
+
+  if (categoryFilter) {
+    url += `&categoryKey=${encodeURIComponent(categoryFilter)}`;
+  }
+
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error('Network response was not ok when fetching news data');
   }
@@ -21,15 +38,21 @@ const fetchNewsData = async (page: number, limit: number): Promise<PaginatedNews
   };
 };
 
-export const useNewsData = (page: number, limit: number) => {
+export const useNewsData = (
+  page: number, 
+  limit: number, 
+  sort: NewsSortOptions, 
+  categoryFilter?: string
+) => {
   const {
     data,
     isLoading,
     isError,
     error,
   } = useQuery<PaginatedNewsResponse, Error>({
-    queryKey: ['newsData', page, limit],
-    queryFn: () => fetchNewsData(page, limit),
+    // Adicionar sort e categoryFilter à queryKey para recarregar quando mudarem
+    queryKey: ['newsData', page, limit, sort, categoryFilter],
+    queryFn: () => fetchNewsData(page, limit, sort, categoryFilter),
     keepPreviousData: true,
   });
 
