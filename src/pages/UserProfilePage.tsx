@@ -1,13 +1,65 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { useTranslation } from 'react-i18next';
-import { UserCircle, Mail, ShieldCheck, Calendar as CalendarIcon } from 'lucide-react';
-import PageLoader from '@/components/PageLoader'; // Para o caso de carregamento do auth
+import { UserCircle, Mail, ShieldCheck, Calendar as CalendarIcon, Edit3, XCircle } from 'lucide-react';
+import PageLoader from '@/components/PageLoader';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { EditProfileSchema, EditProfileFormData } from '@/lib/validators';
+import { useUpdateUserProfile } from '@/hooks/auth';
+import { toast } from 'sonner';
 
 const UserProfilePage: React.FC = () => {
   const { t } = useTranslation();
-  const { currentUser, isLoading: authLoading } = useAuth();
+  const { currentUser, isLoading: authLoading, setCurrentUser } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const { 
+    mutate: updateUser, 
+    isLoading: isUpdating, 
+    isSuccess: updateSuccess, 
+    isError: updateError,
+    error: apiUpdateError,
+    reset: resetMutation
+  } = useUpdateUserProfile();
+
+  const {
+    register,
+    handleSubmit,
+    reset: resetForm,
+    setValue,
+    formState: { errors, isDirty },
+  } = useForm<EditProfileFormData>({
+    resolver: zodResolver(EditProfileSchema),
+    defaultValues: {
+      name: currentUser?.name || '',
+    },
+  });
+
+  useEffect(() => {
+    if (currentUser) {
+      setValue('name', currentUser.name);
+    }
+  }, [currentUser, setValue]);
+
+  useEffect(() => {
+    if (updateSuccess) {
+      toast.success(t('userProfile.edit.success'));
+      setIsEditing(false);
+      resetMutation(); 
+    }
+    if (updateError && apiUpdateError) {
+      const errorMessage = apiUpdateError instanceof Error ? apiUpdateError.message : 'Unknown error';
+      toast.error(t('userProfile.edit.error'), {
+        description: t(errorMessage) || errorMessage,
+      });
+      resetMutation();
+    }
+  }, [updateSuccess, updateError, apiUpdateError, t, resetMutation]);
 
   if (authLoading) {
     return <PageLoader />;
@@ -24,54 +76,94 @@ const UserProfilePage: React.FC = () => {
     );
   }
 
+  const onSubmit = (data: EditProfileFormData) => {
+    updateUser(data);
+  };
+
+  const handleEditToggle = () => {
+    if (isEditing) {
+      resetForm({ name: currentUser.name }); // Reseta para os valores atuais se cancelar
+    }
+    setIsEditing(!isEditing);
+  };
+  
   // Campos adicionais simulados (em uma app real, viriam do UserData)
   const memberSince = '2023-01-15'; // Exemplo
-  const userRole = 'Membro Associado'; // Exemplo
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString(undefined, {
-      year: 'numeric', month: 'long', day: 'numeric'
-    });
-  };
+  const userRoleKey = 'userRole.member'; // Exemplo, para tradução
 
   return (
     <div className="container mx-auto px-4 py-12 md:py-16">
       <Card className="max-w-2xl mx-auto shadow-lg">
-        <CardHeader className="bg-gray-50 p-6 rounded-t-lg">
+        <CardHeader className="bg-gray-50 p-6 rounded-t-lg flex flex-row justify-between items-start">
           <div className="flex items-center space-x-4">
             <UserCircle className="h-16 w-16 text-blue-600" />
             <div>
-              <CardTitle className="text-3xl font-bold text-gray-800">{currentUser.name}</CardTitle>
-              <CardDescription className="text-gray-600 text-md">{t('auth.myProfile')}</CardDescription>
+              <CardTitle className="text-3xl font-bold text-gray-800">
+                {isEditing ? t('userProfile.edit.title') : currentUser.name}
+              </CardTitle>
+              <CardDescription className="text-gray-600 text-md">
+                {isEditing ? t('auth.emailLabel') + ': ' + currentUser.email : t('auth.myProfile')}
+              </CardDescription>
             </div>
           </div>
+          <Button onClick={handleEditToggle} variant="ghost" size="icon" className="text-gray-600 hover:text-blue-600">
+            {isEditing ? <XCircle size={20} /> : <Edit3 size={20} />}
+            <span className="sr-only">{isEditing ? t('userProfile.edit.cancelButton') : t('userProfile.edit.button')}</span>
+          </Button>
         </CardHeader>
-        <CardContent className="p-6 space-y-6">
-          <div className="space-y-3">
-            <h3 className="text-lg font-semibold text-gray-700 border-b pb-2 mb-3">Informações Pessoais</h3>
-            <div className="flex items-center">
-              <Mail className="h-5 w-5 mr-3 text-gray-500" />
-              <span className="text-gray-700">{currentUser.email}</span>
+        <CardContent className="p-6">
+          {isEditing ? (
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+              <div className="space-y-2">
+                <Label htmlFor="name">{t('contactPage.form.nameLabel')}</Label>
+                <Input
+                  id="name"
+                  type="text"
+                  {...register('name')}
+                  className={errors.name ? "border-red-500" : ""}
+                />
+                {errors.name && <p className="text-xs text-red-600">{t(errors.name.message as string)}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">{t('auth.emailLabel')}</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={currentUser.email}
+                  readOnly
+                  disabled
+                  className="bg-gray-100 cursor-not-allowed"
+                />
+                <p className="text-xs text-gray-500">O email não pode ser alterado no momento.</p>
+              </div>
+              <CardFooter className="px-0 pt-4 flex justify-end space-x-3">
+                <Button type="button" variant="outline" onClick={handleEditToggle} disabled={isUpdating}>
+                  {t('userProfile.edit.cancelButton')}
+                </Button>
+                <Button type="submit" disabled={isUpdating || !isDirty} className="bg-blue-600 hover:bg-blue-700">
+                  {isUpdating ? t('Loading...') : t('userProfile.edit.saveButton')}
+                </Button>
+              </CardFooter>
+            </form>
+          ) : (
+            <div className="space-y-4">
+              <h3 className="text-lg font-semibold text-gray-700 border-b pb-2 mb-3">
+                {t('userProfile.personalInfo')}
+              </h3>
+              <div className="flex items-center">
+                <Mail className="h-5 w-5 mr-3 text-gray-500" />
+                <span className="text-gray-700">{currentUser.email}</span>
+              </div>
+              <div className="flex items-center">
+                <CalendarIcon className="h-5 w-5 mr-3 text-gray-500" />
+                <span className="text-gray-700">{t('userProfile.memberSince', { date: new Date(memberSince).toLocaleDateString(t('pt-BR') === 'pt-BR' ? 'pt-BR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }) })}</span>
+              </div>
+              <div className="flex items-center">
+                <ShieldCheck className="h-5 w-5 mr-3 text-gray-500" />
+                <span className="text-gray-700">{t('userProfile.accountType', { type: t(userRoleKey) })}</span>
+              </div>
             </div>
-            {/* Adicionar mais campos conforme necessário */}
-            <div className="flex items-center">
-              <CalendarIcon className="h-5 w-5 mr-3 text-gray-500" />
-              <span className="text-gray-700">Membro desde: {formatDate(memberSince)}</span>
-            </div>
-            <div className="flex items-center">
-              <ShieldCheck className="h-5 w-5 mr-3 text-gray-500" />
-              <span className="text-gray-700">Tipo de Conta: {userRole}</span>
-            </div>
-          </div>
-
-          {/* Seção de Edição (a ser implementada no futuro) */}
-          {/* 
-          <div className="space-y-3 pt-4">
-            <h3 className="text-lg font-semibold text-gray-700 border-b pb-2 mb-3">Editar Informações</h3>
-            <p className="text-sm text-gray-500">Funcionalidade de edição em breve.</p>
-            <Button variant="outline">Editar Perfil</Button>
-          </div> 
-          */}
+          )}
         </CardContent>
       </Card>
     </div>

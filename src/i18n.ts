@@ -248,7 +248,20 @@ const resources = {
       "auth.passwordMismatch": "Passwords do not match.",
       "auth.welcomeUser": "Welcome, {{name}}!",
       "auth.myProfile": "My Profile",
-      "auth.notLoggedIn": "You are not logged in."
+      "auth.notLoggedIn": "You are not logged in.",
+
+      // User Profile Page
+      "userProfile.title": "User Profile",
+      "userProfile.personalInfo": "Personal Information",
+      "userProfile.memberSince": "Member since: {{date}}",
+      "userProfile.accountType": "Account Type: {{type}}",
+      "userProfile.edit.title": "Edit Profile",
+      "userProfile.edit.button": "Edit Profile",
+      "userProfile.edit.saveButton": "Save Changes",
+      "userProfile.edit.cancelButton": "Cancel",
+      "userProfile.edit.success": "Profile updated successfully!",
+      "userProfile.edit.error": "Failed to update profile. Please try again.",
+      "userRole.member": "Associated Member"
     }
   },
   pt: {
@@ -494,7 +507,20 @@ const resources = {
       "auth.passwordMismatch": "As senhas não coincidem.",
       "auth.welcomeUser": "Bem-vindo(a), {{name}}!",
       "auth.myProfile": "Meu Perfil",
-      "auth.notLoggedIn": "Você não está logado."
+      "auth.notLoggedIn": "Você não está logado.",
+
+      // User Profile Page
+      "userProfile.title": "Perfil do Usuário",
+      "userProfile.personalInfo": "Informações Pessoais",
+      "userProfile.memberSince": "Membro desde: {{date}}",
+      "userProfile.accountType": "Tipo de Conta: {{type}}",
+      "userProfile.edit.title": "Editar Perfil",
+      "userProfile.edit.button": "Editar Perfil",
+      "userProfile.edit.saveButton": "Salvar Alterações",
+      "userProfile.edit.cancelButton": "Cancelar",
+      "userProfile.edit.success": "Perfil atualizado com sucesso!",
+      "userProfile.edit.error": "Falha ao atualizar o perfil. Por favor, tente novamente.",
+      "userRole.member": "Membro Associado"
     }
   }
 };
