@@ -153,6 +153,8 @@ export interface UserData {
   id: string;
   name: string;
   email: string;
-  // Adicionar mais campos conforme necessário, e.g., role, memberSince, etc.
+  memberId?: string; // ID de membro, pode ser diferente do ID da entidade
+  registrationDate?: string; // Data de registro em formato ISO string
+  role?: 'user' | 'admin'; // Adicionado na Fase B, mas incluímos aqui para consolidar
   // A senha NUNCA deve ser armazenada aqui ou retornada pela API no frontend.
 }

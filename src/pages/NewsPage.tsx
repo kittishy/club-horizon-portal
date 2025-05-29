@@ -1,10 +1,10 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNewsData, NewsSortOptions } from '@/hooks/useNewsData';
 import { I18nNewsArticleData } from '@/types'; // Importar de @/types
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { CalendarDays, Tag, AlertTriangle, ExternalLink, Filter, ListRestart } from 'lucide-react';
+import { CalendarDays, Tag, AlertTriangle, ExternalLink, Filter, ListRestart, Newspaper, ArrowRight } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
@@ -12,58 +12,56 @@ import PageLoader from '@/components/PageLoader'; // Para o estado de carregamen
 import PaginationControls from '@/components/ui/PaginationControls'; // Importar PaginationControls
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"; // Importar Select
 import { Label } from "@/components/ui/label"; // Importar Label
+import { formatDateForLocale } from '@/lib/dateUtils'; // Importar helper
+import i18nInstance from '@/i18n'; // Importar a instância diretamente
 
 // A interface I18nNewsArticleData foi movida para @/types
 // Esta seção pode ser removida.
 
 interface NewsCardProps {
-  article: I18nNewsArticleData; // Usar o tipo importado
-  formatDate: (dateString: string) => string;
+  article: I18nNewsArticleData;
+  // A prop formatDate não é mais necessária aqui, o card formata internamente
 }
 
-const NewsCard: React.FC<NewsCardProps> = React.memo(({ article, formatDate }) => {
+const NewsCard: React.FC<NewsCardProps> = React.memo(({ article }) => {
   const { t } = useTranslation();
+  // Formata a data diretamente dentro do NewsCard
+  const formattedDate = formatDateForLocale(article.date, i18nInstance, { year: 'numeric', month: 'long', day: 'numeric' });
 
   return (
-    <Card id={`news-${article.id}`} className="flex flex-col overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300">
-      <Link to={`/noticias/${article.id}`} className="block hover:opacity-90 transition-opacity">
-        <LazyLoadImage 
-          alt={t(article.titleKey)} 
-          src={article.imageUrl || '/placeholder-news.jpg'} 
-          effect="blur"
-          className="w-full h-56 object-cover" 
-          placeholderSrc="/placeholder-news-small.jpg" // Idealmente uma imagem placeholder pequena
-        />
-      </Link>
-      <CardHeader className="pb-2">
-        <CardTitle className="text-xl font-semibold text-blue-700">
-          <Link to={`/noticias/${article.id}`} className="hover:text-blue-800 transition-colors">
-            {t(article.titleKey)}
-          </Link>
-        </CardTitle>
-        <div className="flex items-center text-xs text-gray-500 mt-1 space-x-3">
-          <div className="flex items-center">
-            <CalendarDays size={14} className="mr-1" />
-            {/* Usar a chave consolidada home.publishedOn */}
-            <span>{t('home.publishedOn', { date: formatDate(article.date) })}</span>
-          </div>
-          <div className="flex items-center">
-            <Tag size={14} className="mr-1" />
-            <span>{t('newsCard.categoryLabel')}{t(article.categoryKey)}</span>
-          </div>
+    <Card className="overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col h-full">
+      {article.imageUrl && (
+        <div className="aspect-video overflow-hidden">
+          <img 
+            src={article.imageUrl} 
+            alt={t(article.titleKey)} 
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-110"
+            loading="lazy"
+          />
         </div>
-      </CardHeader>
-      <CardContent className="flex-grow">
-        <p className="text-gray-700 text-sm leading-relaxed">{t(article.summaryKey)}</p>
-      </CardContent>
-      <CardFooter className="pt-3 pb-4 bg-gray-50">
-        <Button asChild variant="link" className="text-blue-600 hover:text-blue-700 px-0">
-           <Link to={`/noticias/${article.id}`} className="flex items-center">
-            {t('newsCard.readFullArticle')}
-            <ExternalLink size={16} className="ml-1.5" />
+      )}
+      <CardContent className="p-6 flex-grow flex flex-col">
+        <h3 className="text-xl font-semibold mb-2 text-gray-800 line-clamp-2">{t(article.titleKey)}</h3>
+        <p className="text-gray-600 text-sm mb-4 line-clamp-3 flex-grow">{t(article.summaryKey)}</p>
+        <div className="mt-auto pt-4 border-t border-gray-100">
+          <div className="flex justify-between items-center text-xs text-gray-500">
+            <div className="flex items-center">
+              <CalendarDays size={14} className="mr-1" />
+              <span>{t('home.publishedOn', { date: formattedDate })}</span>
+            </div>
+            <div className="flex items-center">
+              <Newspaper size={14} className="mr-1" />
+              <span>{t(article.categoryKey)}</span>
+            </div>
+          </div>
+          <Link 
+            to={`/noticias/${article.id}`} 
+            className="inline-block mt-4 text-sm font-medium text-blue-600 hover:text-blue-800 transition-colors duration-300"
+          >
+            {t('newsPage.readMore')} <ArrowRight size={14} className="inline ml-1" />
           </Link>
-        </Button>
-      </CardFooter>
+        </div>
+      </CardContent>
     </Card>
   );
 });
@@ -115,11 +113,11 @@ const NewsPage: React.FC = () => {
     setCurrentPage(1);
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString + 'T00:00:00').toLocaleDateString(i18n.language, {
-      year: 'numeric', month: 'long', day: 'numeric',
-    });
-  };
+  const formatDateForFilterDisplay = useCallback((dateString: string | null): string => {
+    if (!dateString) return t('newsPage.filter.allDates'); // Ou algum placeholder
+    // Usar a instância i18n do hook useTranslation
+    return formatDateForLocale(dateString, i18n, { year: 'numeric', month: 'short', day: 'numeric' });
+  }, [i18n, t]);
 
   // Memoizar opções de select para evitar recriação em cada render
   const categorySelectOptions = useMemo(() => newsCategories.map(catKey => (
@@ -201,7 +199,7 @@ const NewsPage: React.FC = () => {
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {newsArticles.map((article: I18nNewsArticleData) => (
-              <NewsCard key={article.id} article={article} formatDate={formatDate} />
+              <NewsCard key={article.id} article={article} />
             ))}
           </div>
           {totalPages && totalPages > 1 && (

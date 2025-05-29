@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { NavItem } from '@/types';
 import { useTranslation } from 'react-i18next';
-import { Menu, X, Calendar, Users, Newspaper, Phone, Home as HomeIcon, LogIn, LogOut, UserCircle } from 'lucide-react';
+import { Menu, X, Calendar, Users, Newspaper, Phone, Home as HomeIcon, LogIn, LogOut, UserCircle, Shield } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/contexts/AuthContext';
 import { useLogout } from '@/hooks/auth';
@@ -72,7 +72,7 @@ const Navbar: React.FC = React.memo(() => {
             >
               <UserCircle size={isMobile ? 20 : 24} />
               {!isMobile && <span className="text-sm font-medium truncate max-w-[100px]">{currentUser.name}</span>}
-              {isMobile && <span className="text-sm font-medium">{t('auth.myProfile')} / {t('auth.logoutButton')}</span>}
+              {isMobile && <span className="text-sm font-medium">{t('auth.userMenuMobile', { name: currentUser.name})}</span>}
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align={isMobile ? 'start' : 'end'} className="w-56">
@@ -82,6 +82,12 @@ const Navbar: React.FC = React.memo(() => {
               <UserCircle className="mr-2 h-4 w-4" />
               <span>{t('auth.myProfile')}</span>
             </DropdownMenuItem>
+            {currentUser.role === 'admin' && (
+              <DropdownMenuItem onClick={() => { navigate('/admin/dashboard'); setIsMenuOpen(false); }} className="cursor-pointer">
+                <Shield className="mr-2 h-4 w-4" />
+                <span>{t('adminNav.dashboard')}</span>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuItem onClick={handleLogout} className="text-red-600 hover:!text-red-600 hover:!bg-red-50 focus:!bg-red-50 focus:!text-red-600 cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
               <span>{t('auth.logoutButton')}</span>
@@ -180,7 +186,9 @@ const Navbar: React.FC = React.memo(() => {
                 </Button>
             )}
             {currentUser && !authLoading && (
-                 <div className="mr-2">{renderAuthSection(true)}</div>
+                 <div className="mr-2">
+                    {renderAuthSection(true)}
+                 </div>
             )}
             <Button
               variant="ghost"

@@ -22,6 +22,9 @@ const registerUser = async (userData: Omit<UserData, 'id'> & { password: string 
     name: userData.name,
     email: userData.email,
     password: userData.password, // A API real faria hash da senha aqui
+    memberId: `MBR-${uuidv4().slice(0,6).toUpperCase()}`, // ID de membro mock
+    registrationDate: new Date().toISOString(), // Data de registro atual
+    role: 'user', // Role padrão
   };
 
   // Simulação de POST para criar usuário

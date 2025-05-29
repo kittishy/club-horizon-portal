@@ -6,6 +6,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import PageLoader from './components/PageLoader';
 import ProtectedRoute from './components/ProtectedRoute';
+import AdminRoute from './components/AdminRoute';
+import { useAuth } from './contexts/AuthContext';
 
 // Lazy load dos componentes de página com os nomes de arquivo corretos
 const Home = lazy(() => import("./pages/Home"));
@@ -18,32 +20,48 @@ const ContactPage = lazy(() => import("./pages/ContactPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const UserProfilePage = lazy(() => import('./pages/UserProfilePage'));
+const AdminDashboardPage = lazy(() => import('./pages/AdminDashboardPage'));
 const NotFound = lazy(() => import("./pages/NotFound"));
+
+const AppContent: React.FC = () => {
+  const { isLoading: authIsLoading } = useAuth();
+
+  if (authIsLoading) {
+    return <PageLoader />;
+  }
+
+  return (
+    <Suspense fallback={<PageLoader />}>
+      <Routes>
+        <Route path="/" element={<Layout />}>
+          <Route index element={<Home />} />
+          <Route path="eventos" element={<EventsPage />} />
+          <Route path="eventos/:eventId" element={<EventDetailPage />} />
+          <Route path="calendario" element={<CalendarPage />} />
+          <Route path="noticias" element={<NewsPage />} />
+          <Route path="noticias/:newsId" element={<NewsDetailPage />} />
+          <Route path="contato" element={<ContactPage />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="perfil" element={<UserProfilePage />} />
+            <Route element={<AdminRoute />}>
+              <Route path="admin/dashboard" element={<AdminDashboardPage />} />
+            </Route>
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Route>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/registro" element={<RegisterPage />} />
+      </Routes>
+    </Suspense>
+  );
+}
 
 const App = () => (
   <TooltipProvider>
     <Toaster />
     <Sonner />
     <BrowserRouter>
-      <Suspense fallback={<PageLoader />}>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route index element={<Home />} />
-            <Route path="eventos" element={<EventsPage />} />
-            <Route path="eventos/:eventId" element={<EventDetailPage />} />
-            <Route path="calendario" element={<CalendarPage />} />
-            <Route path="noticias" element={<NewsPage />} />
-            <Route path="noticias/:newsId" element={<NewsDetailPage />} />
-            <Route path="contato" element={<ContactPage />} />
-            <Route element={<ProtectedRoute />}>
-              <Route path="perfil" element={<UserProfilePage />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Route>
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/registro" element={<RegisterPage />} />
-        </Routes>
-      </Suspense>
+      <AppContent />
     </BrowserRouter>
   </TooltipProvider>
 );

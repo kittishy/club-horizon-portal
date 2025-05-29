@@ -1,4 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
+import { toast } from 'sonner';
+import { i18n } from 'i18next'; // Importar i18n para usar t diretamente se necessário, ou passar t
 
 // Simula uma chamada de API para logout
 // Em um cenário real, isso poderia invalidar um token no backend
@@ -8,18 +10,29 @@ const logoutUser = async (): Promise<void> => {
   return Promise.resolve();
 };
 
+// Função para obter a tradução fora de um componente React
+// Isso é uma forma de contornar, idealmente o toast seria chamado de um componente
+// onde useTranslation está disponível, ou o hook useLogout seria modificado para aceitar t.
+// Para simplificar agora, vamos assumir que i18n já está inicializado.
+const getI18nInstance = (): typeof i18n => {
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const i18nInstance = require('@/i18n').default; 
+  return i18nInstance;
+}
+
 export const useLogout = () => {
   const { setCurrentUser } = useAuth();
+  const i18nInstance = getI18nInstance();
 
   const logout = async () => {
     try {
-      await logoutUser(); // Chama a função de logout simulada (pode ser omitida se não fizer nada)
-      setCurrentUser(null); // Remove o usuário do contexto e localStorage
-      // Poderia adicionar navegação aqui, e.g., para a página de login ou inicial
-      console.log('Logout successful');
+      await logoutUser(); 
+      setCurrentUser(null); 
+      toast.success(i18nInstance.t('auth.logoutSuccess')); // Adicionar toast de sucesso
+      // A navegação é feita no Navbar após chamar logout
     } catch (error) {
       console.error('Logout failed:', error);
-      // Mostrar notificação de erro, embora para logout seja menos comum falhar criticamente
+      toast.error(i18nInstance.t('auth.logoutError')); // Adicionar toast de erro
     }
   };
 

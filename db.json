@@ -113,13 +113,19 @@
       "id": "user1",
       "name": "Usuário Teste",
       "email": "teste@example.com",
-      "password": "senha123" 
+      "password": "senha123",
+      "memberId": "MBR001",
+      "registrationDate": "2023-01-10T10:00:00Z",
+      "role": "user"
     },
     {
       "id": "user2",
       "name": "Admin Club",
       "email": "admin@example.com",
-      "password": "adminseguro"
+      "password": "adminseguro",
+      "memberId": "ADM001",
+      "registrationDate": "2022-12-01T09:00:00Z",
+      "role": "admin"
     }
   ]
 } 

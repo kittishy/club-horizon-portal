@@ -12,6 +12,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { EditProfileSchema, EditProfileFormData } from '@/lib/validators';
 import { useUpdateUserProfile } from '@/hooks/auth';
 import { toast } from 'sonner';
+import { formatDateForLocale } from '@/lib/dateUtils';
+import i18n from '@/i18n';
 
 const UserProfilePage: React.FC = () => {
   const { t } = useTranslation();
@@ -88,8 +90,8 @@ const UserProfilePage: React.FC = () => {
   };
   
   // Campos adicionais simulados (em uma app real, viriam do UserData)
-  const memberSince = '2023-01-15'; // Exemplo
-  const userRoleKey = 'userRole.member'; // Exemplo, para tradução
+  // const memberSince = '2023-01-15'; // Removido, usaremos registrationDate
+  const userRoleKey = currentUser.role === 'admin' ? 'userRole.admin' : 'userRole.member'; 
 
   return (
     <div className="container mx-auto px-4 py-12 md:py-16">
@@ -154,10 +156,18 @@ const UserProfilePage: React.FC = () => {
                 <Mail className="h-5 w-5 mr-3 text-gray-500" />
                 <span className="text-gray-700">{currentUser.email}</span>
               </div>
-              <div className="flex items-center">
-                <CalendarIcon className="h-5 w-5 mr-3 text-gray-500" />
-                <span className="text-gray-700">{t('userProfile.memberSince', { date: new Date(memberSince).toLocaleDateString(t('pt-BR') === 'pt-BR' ? 'pt-BR' : 'en-US', { year: 'numeric', month: 'long', day: 'numeric' }) })}</span>
-              </div>
+              {currentUser.memberId && (
+                <div className="flex items-center">
+                  <ShieldCheck className="h-5 w-5 mr-3 text-gray-500" /> {/* Pode trocar o ícone se quiser */} 
+                  <span className="text-gray-700">{t('userProfile.memberIdLabel')} {currentUser.memberId}</span>
+                </div>
+              )}
+              {currentUser.registrationDate && (
+                <div className="flex items-center">
+                  <CalendarIcon className="h-5 w-5 mr-3 text-gray-500" />
+                  <span className="text-gray-700">{t('userProfile.registrationDateLabel')} {formatDateForLocale(currentUser.registrationDate, i18n)}</span>
+                </div>
+              )}
               <div className="flex items-center">
                 <ShieldCheck className="h-5 w-5 mr-3 text-gray-500" />
                 <span className="text-gray-700">{t('userProfile.accountType', { type: t(userRoleKey) })}</span>

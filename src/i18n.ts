@@ -249,6 +249,14 @@ const resources = {
       "auth.welcomeUser": "Welcome, {{name}}!",
       "auth.myProfile": "My Profile",
       "auth.notLoggedIn": "You are not logged in.",
+      "auth.logoutSuccess": "Logout successful! See you next time.",
+      "auth.logoutError": "Logout failed. Please try again or contact support.",
+      "auth.notAuthorizedErrorTitle": "Access Denied",
+      "auth.notAuthorizedErrorDescription": "You do not have permission to access this page.",
+
+      "adminNav.dashboard": "Admin Panel",
+
+      "auth.userMenuMobile": "{{name}} Menu",
 
       // User Profile Page
       "userProfile.title": "User Profile",
@@ -262,6 +270,9 @@ const resources = {
       "userProfile.edit.success": "Profile updated successfully!",
       "userProfile.edit.error": "Failed to update profile. Please try again.",
       "userRole.member": "Associated Member",
+      "userProfile.memberIdLabel": "Member ID:",
+      "userProfile.registrationDateLabel": "Registration Date:",
+      "userRole.admin": "Administrator",
 
       // API Error Messages
       "apiError.login.fetchUsersFailed": "System error during login. Please try again later.", // Failed to fetch users for login simulation
@@ -518,6 +529,14 @@ const resources = {
       "auth.welcomeUser": "Bem-vindo(a), {{name}}!",
       "auth.myProfile": "Meu Perfil",
       "auth.notLoggedIn": "Você não está logado.",
+      "auth.logoutSuccess": "Logout realizado com sucesso! Até a próxima.",
+      "auth.logoutError": "Falha no logout. Tente novamente ou contate o suporte.",
+      "auth.notAuthorizedErrorTitle": "Acesso Negado",
+      "auth.notAuthorizedErrorDescription": "Você não tem permissão para acessar esta página.",
+
+      "adminNav.dashboard": "Painel Admin",
+
+      "auth.userMenuMobile": "Menu de {{name}}",
 
       // User Profile Page
       "userProfile.title": "Perfil do Usuário",
@@ -531,6 +550,9 @@ const resources = {
       "userProfile.edit.success": "Perfil atualizado com sucesso!",
       "userProfile.edit.error": "Falha ao atualizar o perfil. Por favor, tente novamente.",
       "userRole.member": "Membro Associado",
+      "userProfile.memberIdLabel": "ID de Membro:",
+      "userProfile.registrationDateLabel": "Data de Registro:",
+      "userRole.admin": "Administrador",
 
       // API Error Messages
       "apiError.login.fetchUsersFailed": "Erro de sistema durante o login. Por favor, tente mais tarde.",
