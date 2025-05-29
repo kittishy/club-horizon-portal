@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import { colors as appColors, typography } from "./src/lib/designTokens"; // Import new tokens
 
 export default {
 	darkMode: ["class"],
@@ -19,6 +20,7 @@ export default {
 		},
 		extend: {
 			colors: {
+        // Shadcn UI colors (will be defined by CSS variables in index.css)
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -52,7 +54,7 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
-				sidebar: {
+				sidebar: { // Assuming these are custom for a specific layout
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
 					primary: 'hsl(var(--sidebar-primary))',
@@ -61,8 +63,38 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+
+        // Application-specific colors from designTokens.ts
+        // These can be used directly, e.g., bg-app-primary, text-app-accent-blue
+        appPrimary: appColors.primary,
+        appSecondary: appColors.secondary,
+        appAccent: {
+          blueLight: appColors.accent.blueLight,
+          blue: appColors.accent.blue,
+          blueDark: appColors.accent.blueDark,
+          purpleLight: appColors.accent.purpleLight,
+          purple: appColors.accent.purple,
+          purpleDark: appColors.accent.purpleDark,
+          pinkLight: appColors.accent.pinkLight,
+          pink: appColors.accent.pink,
+          pinkDark: appColors.accent.pinkDark,
+        },
+        appNeutral: appColors.neutral,
 			},
+			fontFamily: {
+        sans: typography.fontFamily.sans,
+        serif: typography.fontFamily.serif,
+        mono: typography.fontFamily.mono,
+      },
+      fontSize: typography.fontSizes,
+      // Gradients can be used via className string from designTokens.colors.gradients
+      // e.g. <div className={appColors.gradients.primary}>Hello</div>
+      // Or define specific gradient utilities if preferred:
+      backgroundImage: {
+        'gradient-primary': `linear-gradient(to right, ${appColors.accent.blue}, ${appColors.accent.purple})`,
+        'gradient-secondary': `linear-gradient(to right, ${appColors.accent.purple}, ${appColors.accent.pink})`,
+      },
 			borderRadius: {
 				lg: 'var(--radius)',
 				md: 'calc(var(--radius) - 2px)',
