@@ -1,0 +1,1 @@
+Este diretório contém os custom hooks reutilizáveis do projeto. 
