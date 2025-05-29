@@ -7,6 +7,14 @@ export interface StatData {
   label: string; // Agora será uma chave de tradução
 }
 
+// Nova interface para dados de stats vindos da API
+export interface ApiStatData {
+  id: string;
+  iconName: string; // e.g., "Users", "Calendar"
+  value: string;
+  label: string; // Chave de tradução
+}
+
 export interface HomePageUpcomingEvent {
   id: number;
   title: string;
@@ -100,6 +108,13 @@ export interface I18nHomePageRecentNews extends Omit<HomePageRecentNews, 'title'
   excerptKey: string;
 }
 
+// Nova interface para a resposta completa da API para a HomePage
+export interface HomePageApiResponse {
+  upcomingEvents: I18nHomePageUpcomingEvent[];
+  recentNews: I18nHomePageRecentNews[];
+  stats: ApiStatData[];
+}
+
 // Para useEventsData.ts (e EventsPage.tsx)
 export interface I18nEventData extends Omit<EventData, 'title' | 'description' | 'category' | 'status' | 'location'> {
   titleKey: string;
@@ -110,16 +125,23 @@ export interface I18nEventData extends Omit<EventData, 'title' | 'description' |
 }
 
 // Para useNewsData.ts (e NewsPage.tsx) - A ser definido quando trabalharmos em NewsPage
-export interface I18nNewsArticleData extends Omit<NewsArticleData, 'title' | 'category' | 'summary' | 'fullContent_pt' | 'fullContent_en'> {
+export interface I18nNewsArticleData extends Omit<NewsArticleData, 'title' | 'category' | 'summary' | 'fullContent_pt' | 'fullContent_en' | 'date'> {
+    id: number;
     titleKey: string;
+    date: string;
     categoryKey: string;
     summaryKey: string;
-    // fullContentKey: string; // Ou uma estrutura mais complexa se o conteúdo for grande
+    imageUrl: string;
+    fullContentKey?: string;
 }
 
 // Para useCalendarData.ts (e CalendarPage.tsx) - A ser definido quando trabalharmos em CalendarPage
-export interface I18nCalendarEventData extends Omit<CalendarEventData, 'title' | 'description' | 'location' | 'category'> {
+export interface I18nCalendarEventData extends Omit<CalendarEventData, 'title' | 'description' | 'location' | 'category' | 'start' | 'end' | 'allDay' | 'id'> {
+    id: string;
     titleKey: string;
+    start: string;
+    end: string;
+    allDay?: boolean;
     descriptionKey?: string;
     locationKey?: string;
     categoryKey?: string;

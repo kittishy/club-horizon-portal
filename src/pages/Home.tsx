@@ -1,15 +1,16 @@
 import React from 'react';
-import { Calendar, MapPin, Clock, ArrowRight } from "lucide-react";
+import { Calendar, MapPin, Clock, ArrowRight, AlertTriangle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { useHomeData } from '@/hooks/useHomeData';
+import { useHomeData } from '@/hooks/useHomeData.tsx';
 import { useTranslation } from 'react-i18next';
 import { StatData, I18nHomePageUpcomingEvent, I18nHomePageRecentNews } from '@/types';
+import PageLoader from '@/components/PageLoader';
 
 const Home: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { upcomingEvents, recentNews, stats } = useHomeData();
+  const { upcomingEvents, recentNews, stats, isLoading, isError, error } = useHomeData();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString + 'T00:00:00').toLocaleDateString(i18n.language, {
@@ -18,6 +19,31 @@ const Home: React.FC = () => {
       day: 'numeric',
     });
   };
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-center">
+        <AlertTriangle className="w-16 h-16 text-red-500 mb-4" />
+        <h2 className="text-2xl font-semibold text-red-700 mb-2">{t('error.genericTitle')}</h2>
+        <p className="text-red-600">{t('error.fetchDataError')}</p>
+        {error && <p className="text-sm text-gray-500 mt-2">Error: {error.message}</p>}
+      </div>
+    );
+  }
+
+  if (!upcomingEvents || !recentNews || !stats) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen text-center">
+        <AlertTriangle className="w-16 h-16 text-yellow-500 mb-4" />
+        <h2 className="text-2xl font-semibold text-yellow-700 mb-2">{t('error.noDataTitle')}</h2>
+        <p className="text-yellow-600">{t('error.noDataAvailable')}</p>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-12">
@@ -40,7 +66,7 @@ const Home: React.FC = () => {
       {/* Stats Section */}
       <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {stats.map((stat: StatData, index: number) => (
-          <Card key={index} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300 border-0 bg-white">
+          <Card key={stat.id || index} className="text-center shadow-lg hover:shadow-xl transition-shadow duration-300 border-0 bg-white">
             <CardContent className="pt-6 flex flex-col items-center">
               <div className="p-3 bg-blue-100 rounded-full mb-4">
                 {stat.icon}
@@ -61,7 +87,7 @@ const Home: React.FC = () => {
           </Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {(upcomingEvents as I18nHomePageUpcomingEvent[]).map((event) => (
+          {upcomingEvents.map((event: I18nHomePageUpcomingEvent) => (
             <Card key={event.id} className="hover:shadow-xl transition-shadow duration-300 border-0 bg-white overflow-hidden flex flex-col">
               <CardHeader className="bg-gray-50 p-4">
                 <CardTitle className="text-blue-700 text-lg">{t(event.titleKey)}</CardTitle>
@@ -100,7 +126,7 @@ const Home: React.FC = () => {
           </Button>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {(recentNews as I18nHomePageRecentNews[]).map((news) => (
+          {recentNews.map((news: I18nHomePageRecentNews) => (
             <Card key={news.id} className="hover:shadow-xl transition-shadow duration-300 border-0 bg-white overflow-hidden flex flex-col">
               <CardHeader className="bg-gray-50 p-4">
                 <CardTitle className="text-blue-700 text-lg">{t(news.titleKey)}</CardTitle>

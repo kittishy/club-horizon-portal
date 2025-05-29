@@ -8,6 +8,7 @@ import { CalendarDays, Tag, AlertTriangle, ExternalLink } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import PageLoader from '@/components/PageLoader'; // Para o estado de carregamento
 
 // A interface I18nNewsArticleData foi movida para @/types
 // Esta seção pode ser removida.
@@ -69,7 +70,7 @@ NewsCard.displayName = 'NewsCard';
 
 const NewsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { newsArticles } = useNewsData();
+  const { newsArticles, isLoading, isError, error } = useNewsData();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString + 'T00:00:00').toLocaleDateString(i18n.language, {
@@ -79,6 +80,21 @@ const NewsPage: React.FC = () => {
     });
   };
 
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center">
+        <AlertTriangle className="w-16 h-16 text-red-500 mb-4" />
+        <h2 className="text-2xl font-semibold text-red-700 mb-2">{t('error.genericTitle')}</h2>
+        <p className="text-red-600">{t('error.fetchDataError')}</p>
+        {error && <p className="text-sm text-gray-500 mt-2">Error: {error.message}</p>}
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="text-center mb-12">
@@ -86,7 +102,7 @@ const NewsPage: React.FC = () => {
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('newsPage.subtitle')}</p>
       </div>
 
-      {newsArticles.length > 0 ? (
+      {newsArticles && newsArticles.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {newsArticles.map((article: I18nNewsArticleData) => (
             <NewsCard key={article.id} article={article} formatDate={formatDate} />

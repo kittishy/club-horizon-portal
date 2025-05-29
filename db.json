@@ -1,0 +1,111 @@
+{
+  "homePageData": {
+    "upcomingEvents": [
+      {
+        "id": 1,
+        "titleKey": "home.event.galaDinner.title",
+        "date": "2025-06-15",
+        "time": "19:00",
+        "locationKey": "location.mainHall",
+        "descriptionKey": "home.event.galaDinner.description"
+      },
+      {
+        "id": 2,
+        "titleKey": "home.event.chessTournament.title",
+        "date": "2025-07-08",
+        "time": "14:00",
+        "locationKey": "location.gamesRoom",
+        "descriptionKey": "home.event.chessTournament.description"
+      }
+    ],
+    "recentNews": [
+      {
+        "id": 1,
+        "titleKey": "home.news.fitnessPartnership.title",
+        "date": "2025-05-28",
+        "excerptKey": "home.news.fitnessPartnership.excerpt"
+      },
+      {
+        "id": 2,
+        "titleKey": "home.news.poolRenovation.title",
+        "date": "2025-05-20",
+        "excerptKey": "home.news.poolRenovation.excerpt"
+      }
+    ],
+    "stats": [
+      { "id": "stat1", "iconName": "Users", "value": "500+", "label": "home.activeMembers" },
+      { "id": "stat2", "iconName": "Calendar", "value": "50+", "label": "home.eventsPerYear" },
+      { "id": "stat3", "iconName": "MapPin", "value": "5", "label": "home.modernEnvironments" },
+      { "id": "stat4", "iconName": "Clock", "value": "50+", "label": "home.yearsOfTradition" }
+    ]
+  },
+  "events": [
+    {
+      "id": 1,
+      "titleKey": "event.galaDinner.title",
+      "date": "2025-08-15",
+      "time": "19:00",
+      "locationKey": "location.nobleHall",
+      "descriptionKey": "event.galaDinner.description",
+      "categoryKey": "event.category.Social",
+      "statusKey": "event.status.Inscrições Abertas",
+      "imageUrl": "/images/events/gala-dinner.jpg",
+      "participants": 80,
+      "maxCapacity": 150
+    },
+    {
+      "id": 2,
+      "titleKey": "event.chessTournament.title",
+      "date": "2025-09-10",
+      "time": "14:00",
+      "locationKey": "location.gamesRoom",
+      "descriptionKey": "event.chessTournament.description",
+      "categoryKey": "event.category.Esportivo",
+      "statusKey": "event.status.Quase Lotado",
+      "imageUrl": "/images/events/chess-tournament.jpg",
+      "participants": 45,
+      "maxCapacity": 50
+    }
+  ],
+  "news": [
+    {
+      "id": 1,
+      "titleKey": "news.article1.title",
+      "date": "2025-07-01",
+      "summaryKey": "news.article1.summary",
+      "categoryKey": "news.category.ClubUpdates",
+      "imageUrl": "/images/news/pool-complex.jpg",
+      "fullContentKey": "news.article1.full"
+    },
+    {
+      "id": 2,
+      "titleKey": "news.article2.title",
+      "date": "2025-07-05",
+      "summaryKey": "news.article2.summary",
+      "categoryKey": "news.category.ClubUpdates",
+      "imageUrl": "/images/news/members-assembly.jpg",
+      "fullContentKey": "news.article2.full"
+    }
+  ],
+  "calendarEvents": [
+    {
+      "id": "calEv1",
+      "titleKey": "event.galaDinner.title",
+      "start": "2025-08-15T19:00:00",
+      "end": "2025-08-15T23:00:00",
+      "allDay": false,
+      "categoryKey": "event.category.Social",
+      "locationKey": "location.nobleHall",
+      "descriptionKey": "event.galaDinner.description"
+    },
+    {
+      "id": "calEv2",
+      "titleKey": "event.chessTournament.title",
+      "start": "2025-09-10T14:00:00",
+      "end": "2025-09-10T18:00:00",
+      "allDay": false,
+      "categoryKey": "event.category.Esportivo",
+      "locationKey": "location.gamesRoom"
+    }
+  ]
+} 

@@ -1,72 +1,51 @@
-import { useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { HomePageApiResponse, StatData, ApiStatData } from '@/types';
 import { Users, Calendar, MapPin, Clock } from 'lucide-react';
-import { StatData, I18nHomePageUpcomingEvent, I18nHomePageRecentNews } from '@/types';
+import React from 'react';
 
-// Adaptado para i18n: title e description agora são chaves de tradução
-interface I18nHomePageUpcomingEvent extends Omit<HomePageUpcomingEvent, 'title' | 'description'> {
-  titleKey: string;
-  descriptionKey: string;
-}
+// Mapeamento de nome de ícone para componente de ícone
+const iconMap: { [key: string]: React.ElementType } = {
+  Users,
+  Calendar,
+  MapPin,
+  Clock,
+};
 
-interface I18nHomePageRecentNews extends Omit<HomePageRecentNews, 'title' | 'excerpt'> {
-  titleKey: string;
-  excerptKey: string;
-}
-
-const upcomingEventsData: I18nHomePageUpcomingEvent[] = [
-  {
-    id: 1,
-    titleKey: "home.event.galaDinner.title",
-    date: "2025-06-15",
-    time: "19:00",
-    locationKey: "location.mainHall",
-    descriptionKey: "home.event.galaDinner.description"
-  },
-  {
-    id: 2,
-    titleKey: "home.event.chessTournament.title",
-    date: "2025-07-08",
-    time: "14:00",
-    locationKey: "location.gamesRoom",
-    descriptionKey: "home.event.chessTournament.description"
-  },
-  {
-    id: 3,
-    titleKey: "home.event.cookingWorkshop.title",
-    date: "2025-07-22",
-    time: "10:00",
-    locationKey: "location.gourmetKitchen",
-    descriptionKey: "home.event.cookingWorkshop.description"
+const fetchHomeData = async (): Promise<HomePageApiResponse> => {
+  const response = await fetch('http://localhost:3001/homePageData');
+  if (!response.ok) {
+    throw new Error('Network response was not ok when fetching home data');
   }
-];
+  return response.json();
+};
 
-const recentNewsData: I18nHomePageRecentNews[] = [
-  {
-    id: 1,
-    titleKey: "home.news.fitnessPartnership.title",
-    date: "2025-05-28",
-    excerptKey: "home.news.fitnessPartnership.excerpt"
-  },
-  {
-    id: 2,
-    titleKey: "home.news.poolRenovation.title",
-    date: "2025-05-20",
-    excerptKey: "home.news.poolRenovation.excerpt"
-  }
-];
-
-// StatData já tem labels que serão usadas como chaves de tradução
-const statsData: StatData[] = [
-  { icon: <Users className="h-10 w-10 text-blue-600" />, value: "500+", label: "home.activeMembers" },
-  { icon: <Calendar className="h-10 w-10 text-blue-600" />, value: "50+", label: "home.eventsPerYear" },
-  { icon: <MapPin className="h-10 w-10 text-blue-600" />, value: "5", label: "home.modernEnvironments" },
-  { icon: <Clock className="h-10 w-10 text-blue-600" />, value: "50+", label: "home.yearsOfTradition" },
-];
-
+// Hook para buscar e transformar os dados da Home
 export const useHomeData = () => {
-  const upcomingEvents = useMemo(() => upcomingEventsData, []);
-  const recentNews = useMemo(() => recentNewsData, []);
-  const stats = useMemo(() => statsData, []);
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+  } = useQuery<HomePageApiResponse, Error>({
+    queryKey: ['homePageData'],
+    queryFn: fetchHomeData,
+  });
 
-  return { upcomingEvents, recentNews, stats };
-}; 
+  // Transforma ApiStatData em StatData
+  const transformedStats: StatData[] | undefined = data?.stats.map((apiStat: ApiStatData) => {
+    const IconComponent = iconMap[apiStat.iconName] || Users; // Fallback para Users icon
+    return {
+      ...apiStat,
+      icon: <IconComponent className="h-10 w-10 text-blue-600" />,
+    };
+  });
+
+  return {
+    upcomingEvents: data?.upcomingEvents,
+    recentNews: data?.recentNews,
+    stats: transformedStats,
+    isLoading,
+    isError,
+    error,
+  };
+};

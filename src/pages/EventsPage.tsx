@@ -7,6 +7,7 @@ import { CalendarDays, Clock, MapPin, Users, AlertTriangle } from 'lucide-react'
 import { useTranslation } from 'react-i18next';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import 'react-lazy-load-image-component/src/effects/blur.css'; // Efeito de blur para placeholder
+import PageLoader from '@/components/PageLoader'; // Para o estado de carregamento
 
 // A interface I18nEventData foi movida para @/types
 // Esta seção pode ser removida.
@@ -94,7 +95,7 @@ EventCard.displayName = 'EventCard';
 
 const EventsPage: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { events } = useEventsData();
+  const { events, isLoading, isError, error } = useEventsData();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString + 'T00:00:00').toLocaleDateString(i18n.language, {
@@ -104,8 +105,20 @@ const EventsPage: React.FC = () => {
     });
   };
 
-  // O cast para I18nEventData já deve estar correto com a importação de @/types
-  // const typedEvents = events as I18nEventData[]; 
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center">
+        <AlertTriangle className="w-16 h-16 text-red-500 mb-4" />
+        <h2 className="text-2xl font-semibold text-red-700 mb-2">{t('error.genericTitle')}</h2>
+        <p className="text-red-600">{t('error.fetchDataError')}</p>
+        {error && <p className="text-sm text-gray-500 mt-2">Error: {error.message}</p>}
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -114,11 +127,11 @@ const EventsPage: React.FC = () => {
         <p className="text-lg text-gray-600 max-w-2xl mx-auto">{t('eventsPage.subtitle')}</p>
       </div>
 
-      {events.length > 0 ? (
+      {events && events.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {events.map((event: I18nEventData) => ( // Adicionar tipo aqui para clareza
+          {events.map((event: I18nEventData) => 
             <EventCard key={event.id} event={event} formatDate={formatDate} />
-          ))}
+          )}
         </div>
       ) : (
         <div className="text-center py-16">

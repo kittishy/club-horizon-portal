@@ -1,5 +1,5 @@
 import { renderHook } from '@testing-library/react';
-import { useHomeData } from './useHomeData';
+import { useHomeData } from './useHomeData.tsx';
 import { Users, Calendar, MapPin, Clock } from 'lucide-react'; // Precisamos para a comparação de stats
 
 describe('useHomeData', () => {

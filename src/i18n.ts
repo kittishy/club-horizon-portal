@@ -160,6 +160,12 @@ const resources = {
       "validation.subject.required": "Subject is required.",
       "validation.message.required": "Message is required.",
       "validation.message.minLength": "Message must be at least {{count}} characters long.", // Exemplo com interpolação
+
+      // Error messages for data fetching
+      "error.genericTitle": "An Error Occurred",
+      "error.fetchDataError": "Could not load the requested data. Please try again later.",
+      "error.noDataTitle": "No Data",
+      "error.noDataAvailable": "There is currently no data to display."
     }
   },
   pt: {
@@ -317,6 +323,12 @@ const resources = {
       "validation.subject.required": "O assunto é obrigatório.",
       "validation.message.required": "A mensagem é obrigatória.",
       "validation.message.minLength": "A mensagem deve ter pelo menos {{count}} caracteres.",
+
+      // Error messages for data fetching
+      "error.genericTitle": "Ocorreu um Erro",
+      "error.fetchDataError": "Não foi possível carregar os dados solicitados. Por favor, tente novamente mais tarde.",
+      "error.noDataTitle": "Sem Dados",
+      "error.noDataAvailable": "Não há dados para exibir no momento."
     }
   }
 };

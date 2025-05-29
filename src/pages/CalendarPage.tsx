@@ -8,7 +8,8 @@ import { I18nCalendarEventData } from '@/types'; // Importar de @/types
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { MapPin } from 'lucide-react';
+import { MapPin, AlertTriangle } from 'lucide-react';
+import PageLoader from '@/components/PageLoader';
 
 // Configurar o localizador do Moment.js
 moment.locale('en'); // Definir 'en' como padrão, será alterado dinamicamente
@@ -84,7 +85,7 @@ EventComponent.displayName = 'EventComponent';
 
 const CalendarPage: React.FC = () => {
   const { t, i18n } = useTranslation();
-  const { calendarEvents } = useCalendarData();
+  const { calendarEvents, isLoading, isError, error } = useCalendarData();
 
   // Atualiza o locale do moment dinamicamente
   useMemo(() => {
@@ -92,10 +93,10 @@ const CalendarPage: React.FC = () => {
   }, [i18n.language]);
 
   const eventsForBigCalendar = useMemo(() => {
-    return (calendarEvents as I18nCalendarEventData[]).map(event => ({
+    return calendarEvents?.map(event => ({
       ...event,
       title: t(event.titleKey),
-    }));
+    })) || [];
   }, [calendarEvents, t]);
 
   const components = useMemo(() => ({
@@ -118,6 +119,21 @@ const CalendarPage: React.FC = () => {
     noEventsInRange: t('calendar.noEventsInRange'),
     showMore: (total: number) => t('calendar.showMore', { count: total }),
   }), [t]);
+
+  if (isLoading) {
+    return <PageLoader />;
+  }
+
+  if (isError) {
+    return (
+      <div className="flex flex-col items-center justify-center h-[calc(100vh-200px)] text-center p-4">
+        <AlertTriangle className="w-16 h-16 text-red-500 mb-4" />
+        <h2 className="text-2xl font-semibold text-red-700 mb-2">{t('error.genericTitle')}</h2>
+        <p className="text-red-600">{t('error.fetchDataError')}</p>
+        {error && <p className="text-sm text-gray-500 mt-2">Error: {error.message}</p>}
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
