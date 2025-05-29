@@ -1,3 +1,4 @@
+
 import { Calendar, MapPin, Clock, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -60,7 +61,7 @@ const Home = () => {
             <Button asChild size="lg" className="bg-yellow-600 hover:bg-yellow-700">
               <Link to="/eventos">Ver Eventos</Link>
             </Button>
-            <Button asChild variant="outline" size="lg" className="text-white border-white hover:bg-white hover:text-blue-900">
+            <Button asChild variant="outline" size="lg" className="text-blue-900 border-white bg-white hover:bg-gray-100">
               <Link to="/contatos">Entre em Contato</Link>
             </Button>
           </div>
