@@ -36,7 +36,7 @@ export const useHomeData = () => {
     const IconComponent = iconMap[apiStat.iconName] || Users; // Fallback para Users icon
     return {
       ...apiStat,
-      icon: <IconComponent className="h-10 w-10 text-blue-600" />,
+      icon: React.createElement(IconComponent, { className: "h-10 w-10 text-blue-600" }),
     };
   });
 

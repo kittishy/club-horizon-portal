@@ -3,12 +3,14 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Sidebar from './Sidebar';
 import Footer from './Footer';
+import Breadcrumbs from './Breadcrumbs';
 
 const Layout: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Navbar />
-      <div className="flex flex-1 container mx-auto py-8 px-4 md:px-0">
+      <Breadcrumbs />
+      <div className="flex flex-1 container mx-auto pb-8 px-4 md:px-0">
         <main className="flex-1 bg-white p-6 md:p-8 rounded-lg shadow-lg">
           <Outlet /> {/* O conteúdo da página específica será renderizado aqui */}
         </main>

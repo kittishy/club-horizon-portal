@@ -165,7 +165,64 @@ const resources = {
       "error.genericTitle": "An Error Occurred",
       "error.fetchDataError": "Could not load the requested data. Please try again later.",
       "error.noDataTitle": "No Data",
-      "error.noDataAvailable": "There is currently no data to display."
+      "error.noDataAvailable": "There is currently no data to display.",
+
+      // News Detail Page
+      "newsDetailPage.notFoundTitle": "News Article Not Found",
+      "newsDetailPage.notFoundText": "The news article you are looking for could not be found or does not exist.",
+      "newsDetailPage.contentUnavailable": "Full content for this article is currently unavailable.",
+      "newsDetailPage.loremIpsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+
+      // Event Detail Page
+      "eventDetailPage.title": "Event Details",
+      "eventDetailPage.notFoundTitle": "Event Not Found",
+      "eventDetailPage.notFoundText": "The event you are looking for could not be found or does not exist.",
+      "eventDetailPage.descriptionTitle": "Event Description",
+      "eventDetailPage.informationTitle": "Event Information",
+      "eventDetailPage.dateLabel": "Date:",
+      "eventDetailPage.timeLabel": "Time:",
+      "eventDetailPage.locationLabel": "Location:",
+      "eventDetailPage.categoryLabel": "Category:",
+      "eventDetailPage.statusLabel": "Status:",
+      "eventDetailPage.participantsLabel": "Participants:",
+      "eventDetailPage.organizerLabel": "Organizer:",
+      "eventDetailPage.contactLabel": "Contact:",
+      "eventDetailPage.registerButton": "Register for Event",
+      "eventDetailPage.viewOnCalendarButton": "View on Calendar",
+      "eventDetailPage.fullDescriptionUnavailable": "Full description for this event is currently unavailable.",
+
+      // Navigation
+      "navigation.goBackButton": "Go Back",
+
+      // Breadcrumbs
+      "breadcrumb.newsDetail": "News: {{newsId}}", // Provisório, idealmente seria o título
+      "breadcrumb.eventDetail": "Event: {{eventId}}", // Provisório, idealmente seria o título
+      "breadcrumb.detail": "Details",
+
+      // Pagination
+      "pagination.previous": "Previous",
+      "pagination.next": "Next",
+      "pagination.page": "Page {{currentPage}} of {{totalPages}}",
+      "pagination.goToPage": "Go to page {{pageNumber}}",
+
+      // General UI
+      "Loading...": "Loading...",
+
+      // Filters & Sorting
+      "filterSort.title": "Filters and Sorting",
+      "filterSort.filterBy": "Filter by",
+      "filterSort.sortBy": "Sort by",
+      "filterSort.allCategories": "All Categories",
+      "filterSort.allStatuses": "All Statuses",
+      "filterSort.clearFilters": "Clear Filters",
+      "filterSort.apply": "Apply",
+      // Sorting Options
+      "sort.dateDesc": "Date (Newest First)",
+      "sort.dateAsc": "Date (Oldest First)",
+      "sort.titleAsc": "Title (A-Z)",
+      "sort.titleDesc": "Title (Z-A)",
+      "sort.participantsDesc": "Participants (Most)",
+      "sort.participantsAsc": "Participants (Fewest)"
     }
   },
   pt: {
@@ -328,7 +385,64 @@ const resources = {
       "error.genericTitle": "Ocorreu um Erro",
       "error.fetchDataError": "Não foi possível carregar os dados solicitados. Por favor, tente novamente mais tarde.",
       "error.noDataTitle": "Sem Dados",
-      "error.noDataAvailable": "Não há dados para exibir no momento."
+      "error.noDataAvailable": "Não há dados para exibir no momento.",
+
+      // News Detail Page
+      "newsDetailPage.notFoundTitle": "Artigo de Notícia Não Encontrado",
+      "newsDetailPage.notFoundText": "O artigo de notícia que você está procurando não foi encontrado ou não existe.",
+      "newsDetailPage.contentUnavailable": "O conteúdo completo para este artigo está indisponível no momento.",
+      "newsDetailPage.loremIpsum": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+
+      // Event Detail Page
+      "eventDetailPage.title": "Detalhes do Evento",
+      "eventDetailPage.notFoundTitle": "Evento Não Encontrado",
+      "eventDetailPage.notFoundText": "O evento que você está procurando não foi encontrado ou não existe.",
+      "eventDetailPage.descriptionTitle": "Descrição do Evento",
+      "eventDetailPage.informationTitle": "Informações do Evento",
+      "eventDetailPage.dateLabel": "Data:",
+      "eventDetailPage.timeLabel": "Horário:",
+      "eventDetailPage.locationLabel": "Local:",
+      "eventDetailPage.categoryLabel": "Categoria:",
+      "eventDetailPage.statusLabel": "Status:",
+      "eventDetailPage.participantsLabel": "Participantes:",
+      "eventDetailPage.organizerLabel": "Organizador:",
+      "eventDetailPage.contactLabel": "Contato:",
+      "eventDetailPage.registerButton": "Inscrever-se no Evento",
+      "eventDetailPage.viewOnCalendarButton": "Ver no Calendário",
+      "eventDetailPage.fullDescriptionUnavailable": "A descrição completa para este evento está indisponível no momento.",
+
+      // Navigation
+      "navigation.goBackButton": "Voltar",
+
+      // Breadcrumbs
+      "breadcrumb.newsDetail": "Notícia: {{newsId}}", // Provisório, idealmente seria o título
+      "breadcrumb.eventDetail": "Evento: {{eventId}}", // Provisório, idealmente seria o título
+      "breadcrumb.detail": "Detalhes",
+
+      // Pagination
+      "pagination.previous": "Anterior",
+      "pagination.next": "Próxima",
+      "pagination.page": "Página {{currentPage}} de {{totalPages}}",
+      "pagination.goToPage": "Ir para página {{pageNumber}}",
+      
+      // General UI
+      "Loading...": "Carregando...",
+
+      // Filters & Sorting
+      "filterSort.title": "Filtros e Ordenação",
+      "filterSort.filterBy": "Filtrar por",
+      "filterSort.sortBy": "Ordenar por",
+      "filterSort.allCategories": "Todas as Categorias",
+      "filterSort.allStatuses": "Todos os Status",
+      "filterSort.clearFilters": "Limpar Filtros",
+      "filterSort.apply": "Aplicar",
+      // Sorting Options
+      "sort.dateDesc": "Data (Mais Recentes)",
+      "sort.dateAsc": "Data (Mais Antigos)",
+      "sort.titleAsc": "Título (A-Z)",
+      "sort.titleDesc": "Título (Z-A)",
+      "sort.participantsDesc": "Participantes (Mais)",
+      "sort.participantsAsc": "Participantes (Menos)"
     }
   }
 };

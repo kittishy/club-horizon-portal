@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { I18nCalendarEventData } from '@/types';
 
+// Interface para o formato de evento que vem da API (com datas como string)
 interface ApiCalendarEvent extends Omit<I18nCalendarEventData, 'start' | 'end'> {
   start: string;
   end: string;
@@ -25,6 +26,7 @@ export const useCalendarData = () => {
     queryFn: fetchCalendarEvents,
   });
 
+  // Transforma os eventos da API para o formato esperado pelo FullCalendar (datas como objetos Date)
   const transformedEvents: I18nCalendarEventData[] | undefined = data?.map(event => ({
     ...event,
     start: new Date(event.start),

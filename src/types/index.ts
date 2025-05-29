@@ -74,6 +74,7 @@ export interface CalendarEventData {
 export interface NavItem {
   name: string; // Agora será uma chave de tradução
   path: string;
+  icon?: React.ReactNode;
 }
 
 // Tipos para Sidebar.tsx
@@ -145,4 +146,4 @@ export interface I18nCalendarEventData extends Omit<CalendarEventData, 'title' |
     descriptionKey?: string;
     locationKey?: string;
     categoryKey?: string;
-} 
+}
