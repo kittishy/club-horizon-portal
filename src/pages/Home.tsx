@@ -1,4 +1,3 @@
-
 import { Calendar, MapPin, Clock, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -61,20 +60,8 @@ const Home = () => {
             <Button asChild size="lg" className="bg-yellow-600 hover:bg-yellow-700">
               <Link to="/eventos">Ver Eventos</Link>
             </Button>
-            <Button 
-              asChild 
-              size="lg" 
-              className="relative bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white border-0 shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300 animate-pulse hover:animate-none px-8 py-3 font-semibold text-lg"
-            >
-              <Link 
-                to="/contatos" 
-                className="relative overflow-hidden group"
-              >
-                <span className="relative z-10 flex items-center gap-2">
-                  ✨ Entre em Contato
-                </span>
-                <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-teal-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              </Link>
+            <Button asChild variant="outline" size="lg" className="text-white border-white hover:bg-white hover:text-blue-900">
+              <Link to="/contatos">Entre em Contato</Link>
             </Button>
           </div>
         </div>
