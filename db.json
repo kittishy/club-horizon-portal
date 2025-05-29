@@ -107,5 +107,19 @@
       "categoryKey": "event.category.Esportivo",
       "locationKey": "location.gamesRoom"
     }
+  ],
+  "users": [
+    {
+      "id": "user1",
+      "name": "Usuário Teste",
+      "email": "teste@example.com",
+      "password": "senha123" 
+    },
+    {
+      "id": "user2",
+      "name": "Admin Club",
+      "email": "admin@example.com",
+      "password": "adminseguro"
+    }
   ]
 } 

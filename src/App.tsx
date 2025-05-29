@@ -14,6 +14,8 @@ const CalendarPage = lazy(() => import("./pages/CalendarPage"));
 const NewsPage = lazy(() => import("./pages/NewsPage"));
 const NewsDetailPage = lazy(() => import("./pages/NewsDetailPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage"));
+const RegisterPage = lazy(() => import("./pages/RegisterPage"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => (
@@ -33,6 +35,8 @@ const App = () => (
             <Route path="contato" element={<ContactPage />} />
             <Route path="*" element={<NotFound />} />
           </Route>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/registro" element={<RegisterPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
