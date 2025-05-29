@@ -13,7 +13,7 @@ const updateUserProfile = async (userId: string, data: EditProfileFormData): Pro
 
   const response = await fetch(`http://localhost:3001/users/${userId}`);
   if (!response.ok) {
-    throw new Error('Failed to fetch user for update');
+    throw new Error('apiError.profile.fetchUserFailed');
   }
   const currentUserData: UserData = await response.json();
 
@@ -34,7 +34,7 @@ const updateUserProfile = async (userId: string, data: EditProfileFormData): Pro
   });
 
   if (!updateResponse.ok) {
-    throw new Error('Failed to update user profile on the server');
+    throw new Error('apiError.profile.updateFailed');
   }
 
   return await updateResponse.json();
@@ -47,7 +47,7 @@ export const useUpdateUserProfile = () => {
     {
       mutationFn: async (data: EditProfileFormData) => {
         if (!currentUser) {
-          throw new Error('User not authenticated');
+          throw new Error('apiError.profile.notAuthenticated');
         }
         return updateUserProfile(currentUser.id, data);
       },

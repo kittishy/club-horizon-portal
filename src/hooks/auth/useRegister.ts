@@ -8,11 +8,11 @@ const registerUser = async (userData: Omit<UserData, 'id'> & { password: string 
   // Simulação: Verificar se o email já existe
   const emailCheckResponse = await fetch(`http://localhost:3001/users?email=${encodeURIComponent(userData.email)}`);
   if (!emailCheckResponse.ok) {
-    throw new Error('Failed to check email availability');
+    throw new Error('apiError.register.checkEmailFailed');
   }
   const existingUsers: UserData[] = await emailCheckResponse.json();
   if (existingUsers.length > 0) {
-    throw new Error('Email already in use');
+    throw new Error('apiError.register.emailInUse');
   }
 
   // Simulação: Adicionar o novo usuário ao db.json (isso não persistirá de verdade com json-server sem reiniciá-lo e modificar o arquivo diretamente)
@@ -34,7 +34,7 @@ const registerUser = async (userData: Omit<UserData, 'id'> & { password: string 
   });
 
   if (!response.ok) {
-    throw new Error('Failed to register user');
+    throw new Error('apiError.register.genericFailed');
   }
 
   // Remover a senha antes de retornar os dados do usuário

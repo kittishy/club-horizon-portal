@@ -261,7 +261,17 @@ const resources = {
       "userProfile.edit.cancelButton": "Cancel",
       "userProfile.edit.success": "Profile updated successfully!",
       "userProfile.edit.error": "Failed to update profile. Please try again.",
-      "userRole.member": "Associated Member"
+      "userRole.member": "Associated Member",
+
+      // API Error Messages
+      "apiError.login.fetchUsersFailed": "System error during login. Please try again later.", // Failed to fetch users for login simulation
+      "apiError.login.invalidCredentials": "Invalid email or password. Please check and try again.", // Invalid email or password
+      "apiError.register.checkEmailFailed": "System error during registration. Please try again later.", // Failed to check email availability
+      "apiError.register.emailInUse": "This email address is already in use. Please use a different email.", // Email already in use
+      "apiError.register.genericFailed": "Registration could not be completed. Please try again.", // Failed to register user
+      "apiError.profile.fetchUserFailed": "Could not load user data for update. Please try again.", // Failed to fetch user for update
+      "apiError.profile.notAuthenticated": "You must be logged in to update your profile.", // User not authenticated
+      "apiError.profile.updateFailed": "Failed to save profile changes to the server. Please try again." // Failed to update user profile on the server
     }
   },
   pt: {
@@ -520,7 +530,17 @@ const resources = {
       "userProfile.edit.cancelButton": "Cancelar",
       "userProfile.edit.success": "Perfil atualizado com sucesso!",
       "userProfile.edit.error": "Falha ao atualizar o perfil. Por favor, tente novamente.",
-      "userRole.member": "Membro Associado"
+      "userRole.member": "Membro Associado",
+
+      // API Error Messages
+      "apiError.login.fetchUsersFailed": "Erro de sistema durante o login. Por favor, tente mais tarde.",
+      "apiError.login.invalidCredentials": "Email ou senha inválidos. Verifique e tente novamente.",
+      "apiError.register.checkEmailFailed": "Erro de sistema durante o registro. Por favor, tente mais tarde.",
+      "apiError.register.emailInUse": "Este endereço de email já está em uso. Por favor, utilize um email diferente.",
+      "apiError.register.genericFailed": "Não foi possível completar o registro. Por favor, tente novamente.",
+      "apiError.profile.fetchUserFailed": "Não foi possível carregar os dados do usuário para atualização. Tente novamente.",
+      "apiError.profile.notAuthenticated": "Você precisa estar logado para atualizar seu perfil.",
+      "apiError.profile.updateFailed": "Falha ao salvar as alterações do perfil no servidor. Tente novamente."
     }
   }
 };

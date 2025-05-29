@@ -22,7 +22,7 @@ const loginUser = async (credentials: Pick<UserData, 'email'> & { password: stri
     const { password, ...userDataToReturn } = user;
     return userDataToReturn as UserData; 
   }
-  throw new Error('Invalid email or password');
+  throw new Error('apiError.login.invalidCredentials');
 };
 
 export const useLogin = () => {
