@@ -1,308 +1,228 @@
-<<<<<<< HEAD
 import React from 'react';
-import { Facebook, Instagram, Twitter, Clock, Phone, ExternalLink, Users, Calendar, Newspaper, Star, Award, MapPin, Mail } from "lucide-react";
+import { 
+  Facebook, Instagram, Twitter, Clock, Phone, ExternalLink, Users, Calendar, 
+  Newspaper, Star, Award, MapPin, Mail, Zap, Link as LinkIcon, ThumbsUp, Info, Send, CalendarDays, Grid // Added new icons
+} from "lucide-react";
 import { useTranslation } from 'react-i18next';
-import { SidebarPartnerLink, SidebarSocialLink, SidebarUsefulInfo } from '@/types';
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { SidebarPartnerLink, SidebarSocialLink, SidebarUsefulInfo } from '@/types'; // Assuming these types are still relevant
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Card can be used as a base if needed, or motion.div
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { designTokens } from '@/lib/designTokens'; // For gradient class strings
+
+// Define a consistent card style
+const cardBaseClasses = "bg-appNeutral-grayLightest/60 dark:bg-appNeutral-grayDarkest/70 backdrop-blur-lg rounded-xl shadow-lg border border-appNeutral-grayLight/50 dark:border-appNeutral-grayDark/50";
 
 const Sidebar: React.FC = React.memo(() => {
   const { t } = useTranslation();
 
   const partnerSites: SidebarPartnerLink[] = [
-    { name: 'Clube dos Livros', url: 'https://clubedoslivros.com.br' },
-    { name: 'Associação Cultural', url: 'https://associacaocultural.org' },
-    { name: 'Centro Esportivo', url: 'https://centroesportivo.com' },
-    { name: 'Academia Wellness', url: 'https://academiawellness.com' },
+    { name: t('sidebar.partnerExample1', 'Clube dos Livros'), url: '#' },
+    { name: t('sidebar.partnerExample2', 'Associação Cultural'), url: '#' },
+    { name: t('sidebar.partnerExample3', 'Centro Esportivo'), url: '#' },
   ];
 
   const socialLinks: SidebarSocialLink[] = [
-    { name: 'Facebook', url: 'https://facebook.com/clubeharmonia', icon: <Facebook size={18} /> },
-    { name: 'Instagram', url: 'https://instagram.com/clubeharmonia', icon: <Instagram size={18} /> },
-    { name: 'Twitter', url: 'https://twitter.com/clubeharmonia', icon: <Twitter size={18} /> },
+    { name: 'Facebook', url: '#', icon: <Facebook size={20} /> },
+    { name: 'Instagram', url: '#', icon: <Instagram size={20} /> },
+    { name: 'Twitter', url: '#', icon: <Twitter size={20} /> },
   ];
 
   const usefulInfo: SidebarUsefulInfo[] = [
     { 
-      title: 'Horário de Funcionamento', 
-      content: 'Segunda a Sexta: 8h às 18h\nSábado: 8h às 12h\nDomingo: Fechado', 
+      title: t('sidebar.infoHoursTitle', 'Horário de Funcionamento'), 
+      content: t('sidebar.infoHoursContent', 'Seg-Sex: 8h-18h\nSáb: 8h-12h'), 
       icon: <Clock size={18} /> 
     },
     { 
-      title: 'Telefone da Secretaria', 
-      content: '(27) 3333-4444', 
+      title: t('sidebar.infoPhoneTitle', 'Telefone da Secretaria'), 
+      content: t('sidebar.infoPhoneContent', '(27) 3333-4444'), 
       icon: <Phone size={18} /> 
     },
     { 
-      title: 'Endereço', 
-      content: 'Rua Alegria, 123\nCidade Feliz - ES', 
+      title: t('sidebar.infoAddressTitle', 'Endereço'), 
+      content: t('sidebar.infoAddressContent', 'Rua Alegria, 123\nCidade Feliz - ES'), 
       icon: <MapPin size={18} /> 
     },
   ];
 
   const quickStats = [
-    { label: 'Membros Ativos', value: '2.5K+', icon: <Users size={16} /> },
-    { label: 'Eventos/Mês', value: '15+', icon: <Calendar size={16} /> },
-    { label: 'Anos de História', value: '50+', icon: <Award size={16} /> },
+    { label: t('sidebar.statsMembers', 'Membros Ativos'), value: '2.5K+', icon: <Users size={16} /> },
+    { label: t('sidebar.statsEvents', 'Eventos/Mês'), value: '15+', icon: <CalendarDays size={16} /> }, // Changed to CalendarDays
+    { label: t('sidebar.statsHistory', 'Anos de História'), value: '50+', icon: <Award size={16} /> },
   ];
 
+  const cardVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.1, type: "spring", stiffness: 260, damping: 20 }
+    })
+  };
+
   return (
-    <aside className="w-80 space-y-6 p-6">
+    <motion.aside 
+      className="w-72 lg:w-80 h-screen sticky top-16 overflow-y-auto p-5 lg:p-6 space-y-6 lg:space-y-8 bg-appNeutral-grayLightest/60 dark:bg-appNeutral-grayDarkest/40 backdrop-blur-md border-r border-appNeutral-grayLight/80 dark:border-appNeutral-grayDark/60 scrollbar-thin scrollbar-thumb-appNeutral-grayLight dark:scrollbar-thumb-appNeutral-grayDark scrollbar-track-transparent"
+      initial={{ x: "-100%", opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      transition={{ duration: 0.5, ease: "easeInOut" }}
+    >
       {/* Club Stats */}
-      <Card className="bg-gradient-to-br from-blue-50 to-purple-50 border-blue-200">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center space-x-2">
-            <Star className="w-5 h-5 text-blue-600" />
-            <span>Clube em Números</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {quickStats.map((stat, index) => (
-            <div key={index} className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <span className="text-blue-600">{stat.icon}</span>
-                <span className="text-sm text-gray-600">{stat.label}</span>
+      <motion.div variants={cardVariants} initial="initial" animate="animate" custom={0}>
+        <Card className={`${cardBaseClasses} bg-gradient-to-br from-appAccent-blueLight/20 via-appNeutral-grayLightest/80 to-appAccent-purpleLight/20 dark:from-appAccent-blueDark/20 dark:via-appNeutral-grayDarkest/80 dark:to-appAccent-purpleDark/20`}>
+          <CardHeader className="pb-3 pt-5">
+            <CardTitle className="text-lg font-semibold text-appPrimary dark:text-appAccent-blueLight flex items-center">
+              <Star className="w-5 h-5 mr-2.5 text-appAccent-yellow" />
+              {t('sidebar.clubStatsTitle', 'Clube em Números')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2.5 text-sm">
+            {quickStats.map((stat, index) => (
+              <div key={index} className="flex items-center justify-between py-1.5">
+                <div className="flex items-center space-x-2.5">
+                  <span className="text-appAccent-blue dark:text-appAccent-blueLight">{React.cloneElement(stat.icon, {size: 18})}</span>
+                  <span className="text-appNeutral-grayDarker dark:text-appNeutral-grayLighter">{stat.label}</span>
+                </div>
+                <Badge variant="secondary" className="bg-appAccent-blueLight/70 dark:bg-appAccent-blueDark/50 text-appAccent-blueDark dark:text-appAccent-blueLight font-medium px-2.5 py-0.5">
+                  {stat.value}
+                </Badge>
               </div>
-              <Badge variant="secondary" className="bg-blue-100 text-blue-700 font-semibold">
-                {stat.value}
-              </Badge>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+            ))}
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Quick Actions */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center space-x-2">
-            <Calendar className="w-5 h-5 text-purple-600" />
-            <span>Acesso Rápido</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2">
-          <Link to="/eventos">
-            <Button variant="outline" className="w-full justify-start" size="sm">
-              <Calendar className="w-4 h-4 mr-2" />
-              Próximos Eventos
-            </Button>
-          </Link>
-          <Link to="/noticias">
-            <Button variant="outline" className="w-full justify-start" size="sm">
-              <Newspaper className="w-4 h-4 mr-2" />
-              Últimas Notícias
-            </Button>
-          </Link>
-          <Link to="/contato">
-            <Button variant="outline" className="w-full justify-start" size="sm">
-              <Mail className="w-4 h-4 mr-2" />
-              Entre em Contato
-            </Button>
-          </Link>
-        </CardContent>
-      </Card>
-
-      {/* Sites Parceiros */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center space-x-2">
-            <ExternalLink className="w-5 h-5 text-green-600" />
-            <span>{t('sidebar.partnerSites')}</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ul className="space-y-2">
-            {partnerSites.map((site, index) => (
-              <li key={index}>
-                <a 
-                  href={site.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-between text-sm text-gray-600 hover:text-blue-600 transition-colors group p-2 rounded-lg hover:bg-gray-50"
-                >
-                  <span>{site.name}</span>
-                  <ExternalLink className="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" />
-                </a>
-              </li>
+      <motion.div variants={cardVariants} initial="initial" animate="animate" custom={1}>
+        <Card className={cardBaseClasses}>
+          <CardHeader className="pb-3 pt-5">
+            <CardTitle className="text-lg font-semibold text-appPrimary dark:text-appAccent-blueLight flex items-center">
+              <Grid className="w-5 h-5 mr-2.5 text-appAccent-purple dark:text-appAccent-purpleLight" /> {/* Changed to Grid */}
+              {t('sidebar.quickActionsTitle', 'Acesso Rápido')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            {[
+              { to: "/eventos", labelKey: "sidebar.actionEvents", icon: <CalendarDays size={18} /> },
+              { to: "/noticias", labelKey: "sidebar.actionNews", icon: <Newspaper size={18} /> },
+              { to: "/contato", labelKey: "sidebar.actionContact", icon: <Mail size={18} /> },
+            ].map((action, idx) => (
+              <Button key={idx} asChild variant="ghost" className="w-full justify-start text-appNeutral-grayDarker dark:text-appNeutral-grayLight hover:bg-appAccent-purpleLight/40 dark:hover:bg-appAccent-purpleDark/40 hover:text-appAccent-purpleDark dark:hover:text-appAccent-purpleLight px-3 py-2 text-sm">
+                <Link to={action.to}>
+                  <span className="mr-3 opacity-80">{action.icon}</span>
+                  {t(action.labelKey)}
+                </Link>
+              </Button>
             ))}
-          </ul>
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
 
-      {/* Redes Sociais */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center space-x-2">
-            <Users className="w-5 h-5 text-pink-600" />
-            <span>{t('sidebar.socialMedia')}</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex justify-center space-x-4">
-            {socialLinks.map((social, index) => (
-              <a
-                key={index}
-                href={social.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="p-3 bg-gray-100 rounded-full text-gray-600 hover:bg-blue-100 hover:text-blue-600 transition-all duration-300 hover:scale-110"
-                title={social.name}
-              >
-                {social.icon}
-              </a>
-=======
+      {/* Partner Links */}
+      <motion.div variants={cardVariants} initial="initial" animate="animate" custom={2}>
+        <Card className={cardBaseClasses}>
+          <CardHeader className="pb-3 pt-5">
+            <CardTitle className="text-lg font-semibold text-appPrimary dark:text-appAccent-blueLight flex items-center">
+              <LinkIcon className="w-5 h-5 mr-2.5 text-appAccent-green" />
+              {t('sidebar.partnerSites')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ul className="space-y-1.5">
+              {partnerSites.map((site, index) => (
+                <li key={index}>
+                  <motion.a 
+                    href={site.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-between p-2.5 rounded-lg text-sm text-appNeutral-grayDarker dark:text-appNeutral-grayLight group hover:bg-appAccent-greenLight/40 dark:hover:bg-appAccent-green/20"
+                    whileHover={{ x: 2, color: designTokens.colors.accent.greenDark }}
+                  >
+                    <span>{site.name}</span>
+                    <ExternalLink className="w-4 h-4 opacity-60 group-hover:opacity-100 text-appAccent-greenDark dark:text-appAccent-green" />
+                  </motion.a>
+                </li>
+              ))}
+            </ul>
+          </CardContent>
+        </Card>
+      </motion.div>
 
-import { ExternalLink, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-
-const Sidebar = () => {
-  const partners = [
-    { name: "Academia Fitness Plus", url: "#", description: "Desconto especial para sócios" },
-    { name: "Restaurante Bella Vista", url: "#", description: "10% de desconto" },
-    { name: "Hotel Central Plaza", url: "#", description: "Tarifas preferenciais" },
-    { name: "Livraria Conhecimento", url: "#", description: "15% off em livros" }
-  ];
-
-  const usefulInfo = [
-    "Horário da recepção: 7h às 22h",
-    "Reserva de salões: até 15 dias antecedência",
-    "Estacionamento gratuito para sócios",
-    "Wi-Fi liberado em todas as áreas",
-    "Dress code: traje social nos eventos"
-  ];
-
-  return (
-    <div className="space-y-6">
       {/* Social Media */}
-      <Card className="border-0 shadow-md">
-        <CardHeader>
-          <CardTitle className="text-lg text-blue-900">Redes Sociais</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            <Button variant="outline" className="w-full justify-start" size="sm">
-              <Facebook className="h-4 w-4 mr-2" />
-              Facebook
-              <ExternalLink className="h-3 w-3 ml-auto" />
-            </Button>
-            <Button variant="outline" className="w-full justify-start" size="sm">
-              <Instagram className="h-4 w-4 mr-2" />
-              Instagram
-              <ExternalLink className="h-3 w-3 ml-auto" />
-            </Button>
-            <Button variant="outline" className="w-full justify-start" size="sm">
-              <Twitter className="h-4 w-4 mr-2" />
-              Twitter
-              <ExternalLink className="h-3 w-3 ml-auto" />
-            </Button>
-            <Button variant="outline" className="w-full justify-start" size="sm">
-              <Linkedin className="h-4 w-4 mr-2" />
-              LinkedIn
-              <ExternalLink className="h-3 w-3 ml-auto" />
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Partners */}
-      <Card className="border-0 shadow-md">
-        <CardHeader>
-          <CardTitle className="text-lg text-blue-900">Parceiros</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            {partners.map((partner, index) => (
-              <div key={index} className="border-l-4 border-blue-600 pl-3">
-                <h4 className="font-semibold text-sm text-gray-900">{partner.name}</h4>
-                <p className="text-xs text-gray-600">{partner.description}</p>
-              </div>
->>>>>>> 5d3ae46afb28d48859273698052cf25058705ae0
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-<<<<<<< HEAD
-      {/* Informações Úteis */}
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="text-lg flex items-center space-x-2">
-            <Clock className="w-5 h-5 text-orange-600" />
-            <span>{t('sidebar.usefulInfo')}</span>
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {usefulInfo.map((info, index) => (
-            <div key={index} className="border-l-4 border-blue-200 pl-4 py-2">
-              <div className="flex items-center space-x-2 mb-2">
-                <span className="text-blue-600">{info.icon}</span>
-                <h4 className="font-medium text-gray-800 text-sm">{info.title}</h4>
-              </div>
-              <p className="text-xs text-gray-600 whitespace-pre-line leading-relaxed">{info.content}</p>
+      <motion.div variants={cardVariants} initial="initial" animate="animate" custom={3}>
+        <Card className={cardBaseClasses}>
+          <CardHeader className="pb-3 pt-5">
+            <CardTitle className="text-lg font-semibold text-appPrimary dark:text-appAccent-blueLight flex items-center">
+              <ThumbsUp className="w-5 h-5 mr-2.5 text-appAccent-pink" />
+              {t('sidebar.socialMedia')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="flex justify-around items-center pt-1">
+              {socialLinks.map((social, index) => (
+                <motion.a
+                  key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="p-2.5 bg-appNeutral-grayLighter/70 dark:bg-appNeutral-grayDark/70 text-appNeutral-grayDarker dark:text-appNeutral-grayLight rounded-full"
+                  whileHover={{ scale: 1.15, y: -2, color: designTokens.colors.accent.pink }}
+                  title={social.name}
+                >
+                  {social.icon}
+                </motion.a>
+              ))}
             </div>
-          ))}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </motion.div>
+
+      {/* Useful Info */}
+      <motion.div variants={cardVariants} initial="initial" animate="animate" custom={4}>
+        <Card className={cardBaseClasses}>
+          <CardHeader className="pb-3 pt-5">
+            <CardTitle className="text-lg font-semibold text-appPrimary dark:text-appAccent-blueLight flex items-center">
+              <Info className="w-5 h-5 mr-2.5 text-appAccent-blue" /> {/* Changed from orange to blue for variety */}
+              {t('sidebar.usefulInfo')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
+            {usefulInfo.map((info, index) => (
+              <div key={index} className="border-l-4 border-appAccent-blueLight dark:border-appAccent-blueDark pl-3 py-1.5 text-sm">
+                <div className="flex items-center space-x-2 mb-0.5">
+                  <span className="text-appAccent-blue dark:text-appAccent-blueLight">{React.cloneElement(info.icon, {size: 16})}</span>
+                  <h4 className="font-medium text-appPrimary dark:text-appAccent-blueLight">{info.title}</h4>
+                </div>
+                <p className="text-xs text-appNeutral-grayDark dark:text-appNeutral-grayLight whitespace-pre-line leading-snug">{info.content}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </motion.div>
 
       {/* Newsletter Signup */}
-      <Card className="bg-gradient-to-br from-purple-50 to-pink-50 border-purple-200">
-        <CardContent className="pt-6">
-          <div className="text-center space-y-3">
-            <div className="w-12 h-12 bg-gradient-to-br from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto">
-              <Mail className="w-6 h-6 text-white" />
+      <motion.div variants={cardVariants} initial="initial" animate="animate" custom={5}>
+        <Card className={`${designTokens.colors.gradients.primary} text-appNeutral-grayLightest dark:text-appNeutral-grayLightest p-6 rounded-xl shadow-lg`}>
+          <CardContent className="pt-0 text-center space-y-3"> {/* pt-0 because Card already has padding */}
+            <div className="w-12 h-12 bg-appNeutral-white/20 rounded-full flex items-center justify-center mx-auto mb-3">
+              <Send className="w-6 h-6 text-appNeutral-white" /> {/* Changed Mail to Send */}
             </div>
             <div>
-              <h4 className="font-semibold text-gray-800 mb-1">Newsletter</h4>
-              <p className="text-xs text-gray-600 mb-3">
-                Receba as últimas novidades do clube
-              </p>
+              <h4 className="font-semibold text-lg mb-1">{t('sidebar.newsletterTitle', 'Fique por Dentro!')}</h4>
+              <p className="text-sm opacity-90 mb-4">{t('sidebar.newsletterSubtitle', 'Receba novidades e eventos.')}</p>
             </div>
-            <Button size="sm" className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700">
-              Inscrever-se
+            <Button size="sm" className="w-full bg-appNeutral-white text-appPrimary hover:bg-appNeutral-white/90 dark:text-appAccent-blueDark dark:hover:bg-appNeutral-grayLighter/90 font-semibold">
+              {t('sidebar.newsletterButton', 'Inscrever-se')}
             </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </aside>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </motion.aside>
   );
 });
 Sidebar.displayName = 'Sidebar';
-=======
-      {/* Useful Information */}
-      <Card className="border-0 shadow-md">
-        <CardHeader>
-          <CardTitle className="text-lg text-blue-900">Informações Úteis</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-2">
-            {usefulInfo.map((info, index) => (
-              <div key={index} className="text-sm text-gray-700 pb-2 border-b border-gray-100 last:border-b-0">
-                {info}
-              </div>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Newsletter */}
-      <Card className="border-0 shadow-md bg-gradient-to-br from-blue-50 to-blue-100">
-        <CardHeader>
-          <CardTitle className="text-lg text-blue-900">Newsletter</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-sm text-gray-700 mb-4">
-            Receba as últimas novidades e eventos do clube em seu e-mail
-          </p>
-          <Button className="w-full bg-blue-600 hover:bg-blue-700" size="sm">
-            Assinar Newsletter
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
-};
->>>>>>> 5d3ae46afb28d48859273698052cf25058705ae0
 
 export default Sidebar;

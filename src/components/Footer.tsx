@@ -1,12 +1,13 @@
-<<<<<<< HEAD
 import React from 'react';
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Users, Calendar, Newspaper, ArrowRight, Heart } from "lucide-react";
+import { Facebook, Instagram, Twitter, Mail, Phone, MapPin, Users, Calendar, Newspaper, ArrowRight, Heart } from "lucide-react"; // CalendarDays can be an alternative for Calendar
 import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { designTokens } from '@/lib/designTokens'; // For gradient class strings if needed
 
 const Footer: React.FC = React.memo(() => {
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation(); // Added t
   const currentYear = new Date().getFullYear();
 
   const changeLanguage = (lng: string) => {
@@ -14,252 +15,202 @@ const Footer: React.FC = React.memo(() => {
   };
 
   const quickLinks = [
-    { name: 'Eventos', path: '/eventos', icon: <Calendar size={16} /> },
-    { name: 'Calendário', path: '/calendario', icon: <Calendar size={16} /> },
-    { name: 'Notícias', path: '/noticias', icon: <Newspaper size={16} /> },
-    { name: 'Contatos', path: '/contato', icon: <Phone size={16} /> },
+    { nameKey: 'footer.links.events', path: '/eventos', icon: <Calendar size={16} /> },
+    { nameKey: 'footer.links.calendar', path: '/calendario', icon: <Calendar size={16} /> }, // Could use CalendarDays
+    { nameKey: 'footer.links.news', path: '/noticias', icon: <Newspaper size={16} /> },
+    { nameKey: 'footer.links.contact', path: '/contato', icon: <Phone size={16} /> },
   ];
 
   const socialLinks = [
-    { name: 'Facebook', url: 'https://facebook.com/clubeharmonia', icon: <Facebook size={20} />, color: 'hover:text-blue-500' },
-    { name: 'Instagram', url: 'https://instagram.com/clubeharmonia', icon: <Instagram size={20} />, color: 'hover:text-pink-500' },
-    { name: 'Twitter', url: 'https://twitter.com/clubeharmonia', icon: <Twitter size={20} />, color: 'hover:text-blue-400' },
+    { name: 'Facebook', url: '#', icon: <Facebook size={20} />, hoverColor: 'hover:text-appAccent-blue' }, // Example, replace # with actual URLs
+    { name: 'Instagram', url: '#', icon: <Instagram size={20} />, hoverColor: 'hover:text-appAccent-pink' },
+    { name: 'Twitter', url: '#', icon: <Twitter size={20} />, hoverColor: 'hover:text-appAccent-blueLight' },
   ];
 
+  const footerColumnVariants = {
+    initial: { opacity: 0, y: 20 },
+    animate: (i: number) => ({
+      opacity: 1,
+      y: 0,
+      transition: { delay: i * 0.15, ease: "easeOut", duration: 0.5 }
+    })
+  };
+  
+  const linkItemVariants = {
+    initial: { opacity: 0, x: -10 },
+    animate: { opacity: 1, x: 0 },
+    hover: { x: 2, color: designTokens.colors.accent.blueLight } // Example, adjust as needed
+  };
+
+  const socialIconVariants = {
+    hover: { scale: 1.2, y: -2, transition: { type: "spring", stiffness: 300 } }
+  };
+
+
   return (
-    <footer className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-gray-300">
+    <footer className="bg-appNeutral-grayDarkest dark:bg-black text-appNeutral-grayLight dark:text-appNeutral-grayLighter">
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
           {/* Brand Section */}
-          <div className="lg:col-span-2">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-blue-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-                <Users className="w-6 h-6 text-white" />
+          <motion.div 
+            className="lg:col-span-2"
+            variants={footerColumnVariants}
+            initial="initial"
+            animate="animate"
+            custom={0}
+          >
+            <div className="flex items-center space-x-3 mb-5">
+              <div className={`w-11 h-11 rounded-xl flex items-center justify-center shadow-lg ${designTokens.colors.gradients.primary}`}>
+                <Users className="w-6 h-6 text-appNeutral-white" />
               </div>
               <div className="flex flex-col">
-                <span className="text-2xl font-bold text-white">
-                  Clube Harmonia
+                <span className="text-2xl font-bold text-appNeutral-white">
+                  {t('footer.clubName', 'Clube Harmonia')}
                 </span>
-                <span className="text-sm text-gray-400 font-medium">
-                  Conectando pessoas
+                <span className="text-sm text-appNeutral-gray dark:text-appNeutral-grayRegular">
+                  {t('footer.clubSubtitle', 'Conectando pessoas')}
                 </span>
               </div>
             </div>
-            <p className="text-gray-400 leading-relaxed mb-6 max-w-md">
-              Conectando pessoas através de experiências únicas há mais de 50 anos. 
-              Somos uma comunidade dedicada ao crescimento pessoal, networking e 
-              desenvolvimento de relacionamentos significativos.
+            <p className="text-appNeutral-gray dark:text-appNeutral-grayRegular leading-relaxed mb-6 max-w-md text-sm">
+              {t('footer.clubDescription', 'Conectando pessoas através de experiências únicas há mais de 50 anos. Somos uma comunidade dedicada ao crescimento pessoal, networking e desenvolvimento de relacionamentos significativos.')}
             </p>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <span>Feito com</span>
-              <Heart className="w-4 h-4 text-red-500 fill-current" />
-              <span>para nossa comunidade</span>
-=======
-
-import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
-import { Button } from "@/components/ui/button";
-
-const Footer = () => {
-  return (
-    <footer className="bg-gray-900 text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          {/* Club Info */}
-          <div>
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-800 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-lg">CH</span>
-              </div>
-              <span className="text-xl font-bold">Clube Harmonia</span>
+            <div className="flex items-center space-x-1.5 text-xs text-appNeutral-grayMedium">
+              <span>{t('footer.madeWith', 'Feito com')}</span>
+              <Heart className="w-3.5 h-3.5 text-appAccent-pink fill-current" />
+              <span>{t('footer.forCommunity', 'para nossa comunidade')}</span>
             </div>
-            <p className="text-gray-300 mb-4">
-              Conectando pessoas através de experiências únicas há mais de 50 anos.
-            </p>
-            <div className="flex space-x-3">
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white p-2">
-                <Facebook className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white p-2">
-                <Instagram className="h-5 w-5" />
-              </Button>
-              <Button variant="ghost" size="sm" className="text-gray-300 hover:text-white p-2">
-                <Twitter className="h-5 w-5" />
-              </Button>
->>>>>>> 5d3ae46afb28d48859273698052cf25058705ae0
-            </div>
-          </div>
+          </motion.div>
 
           {/* Quick Links */}
-          <div>
-<<<<<<< HEAD
-            <h3 className="text-lg font-semibold text-white mb-6 relative">
-              Links Rápidos
-              <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
+          <motion.div
+            variants={footerColumnVariants}
+            initial="initial"
+            animate="animate"
+            custom={1}
+          >
+            <h3 className="text-lg font-semibold text-appNeutral-white mb-5 relative">
+              {t('footer.quickLinksTitle', 'Links Rápidos')}
+              <span className={`absolute -bottom-1.5 left-0 w-10 h-0.5 rounded-full ${designTokens.colors.gradients.primary}`}></span>
             </h3>
-            <ul className="space-y-3">
+            <ul className="space-y-2.5">
               {quickLinks.map((link) => (
-                <li key={link.name}>
-                  <Link
-                    to={link.path}
-                    className="flex items-center space-x-3 text-gray-400 hover:text-white transition-all duration-300 group"
+                <li key={link.nameKey}>
+                  <motion.custom
+                    variants={linkItemVariants}
+                    initial="initial"
+                    whileHover="hover"
+                    animate="animate" // can be triggered by useInView if desired for list items
+                    custom={{color: designTokens.colors.accent.blueLight}} // Pass target color via custom if needed for variant
+                    className="block"
                   >
-                    <span className="text-gray-500 group-hover:text-blue-400 transition-colors duration-300">
-                      {link.icon}
-                    </span>
-                    <span className="group-hover:translate-x-1 transition-transform duration-300">
-                      {link.name}
-                    </span>
-                    <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all duration-300" />
-                  </Link>
+                    <Link
+                      to={link.path}
+                      className="flex items-center space-x-2.5 text-appNeutral-gray dark:text-appNeutral-grayRegular group hover:text-appNeutral-white dark:hover:text-appAccent-blueLight transition-colors duration-200"
+                    >
+                      <span className="text-appNeutral-grayMedium group-hover:text-appAccent-blue transition-colors duration-200">{React.cloneElement(link.icon, {size:16})}</span>
+                      <span>{t(link.nameKey)}</span>
+                      <ArrowRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-appAccent-blue" />
+                    </Link>
+                  </motion.custom>
                 </li>
               ))}
-=======
-            <h3 className="text-lg font-semibold mb-4">Links Rápidos</h3>
-            <ul className="space-y-2">
-              <li><a href="/" className="text-gray-300 hover:text-white transition-colors">Home</a></li>
-              <li><a href="/eventos" className="text-gray-300 hover:text-white transition-colors">Eventos</a></li>
-              <li><a href="/calendario" className="text-gray-300 hover:text-white transition-colors">Calendário</a></li>
-              <li><a href="/noticias" className="text-gray-300 hover:text-white transition-colors">Notícias</a></li>
-              <li><a href="/contatos" className="text-gray-300 hover:text-white transition-colors">Contatos</a></li>
             </ul>
-          </div>
+          </motion.div>
 
-          {/* Services */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Serviços</h3>
-            <ul className="space-y-2 text-gray-300">
-              <li>Eventos Corporativos</li>
-              <li>Festas de Casamento</li>
-              <li>Formatura</li>
-              <li>Workshops</li>
-              <li>Palestras</li>
->>>>>>> 5d3ae46afb28d48859273698052cf25058705ae0
-            </ul>
-          </div>
-
-          {/* Contact Info */}
-          <div>
-<<<<<<< HEAD
-            <h3 className="text-lg font-semibold text-white mb-6 relative">
-              Contato
-              <div className="absolute -bottom-2 left-0 w-12 h-0.5 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full"></div>
+          {/* Contact Info & Social Media */}
+          <motion.div
+            variants={footerColumnVariants}
+            initial="initial"
+            animate="animate"
+            custom={2}
+          >
+            <h3 className="text-lg font-semibold text-appNeutral-white mb-5 relative">
+              {t('footer.contactTitle', 'Contato')}
+              <span className={`absolute -bottom-1.5 left-0 w-10 h-0.5 rounded-full ${designTokens.colors.gradients.secondary}`}></span>
             </h3>
-            <ul className="space-y-4 text-sm">
+            <ul className="space-y-3 text-sm">
               <li className="flex items-start space-x-3">
-                <MapPin className="h-5 w-5 mt-0.5 text-blue-400 flex-shrink-0" />
+                <MapPin className="h-4.5 w-4.5 mt-0.5 text-appAccent-blue dark:text-appAccent-blueLight flex-shrink-0" />
                 <div>
-                  <p className="text-gray-300">Rua Alegria, 123</p>
-                  <p className="text-gray-400">Cidade Feliz - ES, 29000-000</p>
+                  <p className="text-appNeutral-gray dark:text-appNeutral-grayRegular">{t('footer.addressLine1', 'Rua Alegria, 123')}</p>
+                  <p className="text-appNeutral-gray dark:text-appNeutral-grayRegular">{t('footer.addressLine2', 'Cidade Feliz - ES, 29000-000')}</p>
                 </div>
               </li>
               <li className="flex items-center space-x-3">
-                <Phone className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <a href="tel:+552733334444" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  (27) 3333-4444
+                <Phone className="h-4.5 w-4.5 text-appAccent-blue dark:text-appAccent-blueLight flex-shrink-0" />
+                <a href={`tel:${t('footer.phoneValue', '+552733334444')}`} className="text-appNeutral-gray dark:text-appNeutral-grayRegular hover:text-appNeutral-white dark:hover:text-appAccent-blueLight transition-colors duration-200">
+                  {t('footer.phoneNumber', '(27) 3333-4444')}
                 </a>
               </li>
               <li className="flex items-center space-x-3">
-                <Mail className="h-5 w-5 text-blue-400 flex-shrink-0" />
-                <a href="mailto:contato@clubeharmonia.com.br" className="text-gray-300 hover:text-white transition-colors duration-300">
-                  contato@clubeharmonia.com.br
+                <Mail className="h-4.5 w-4.5 text-appAccent-blue dark:text-appAccent-blueLight flex-shrink-0" />
+                <a href={`mailto:${t('footer.emailValue', 'contato@clubeharmonia.com.br')}`} className="text-appNeutral-gray dark:text-appNeutral-grayRegular hover:text-appNeutral-white dark:hover:text-appAccent-blueLight transition-colors duration-200">
+                  {t('footer.emailAddress', 'contato@clubeharmonia.com.br')}
                 </a>
               </li>
             </ul>
 
             {/* Social Links */}
-            <div className="mt-8">
-              <h4 className="text-sm font-medium text-white mb-4">Siga-nos</h4>
-              <div className="flex space-x-4">
+            <div className="mt-6">
+              <h4 className="text-base font-medium text-appNeutral-white mb-3">{t('footer.followUs', 'Siga-nos')}</h4>
+              <div className="flex space-x-3">
                 {socialLinks.map((social) => (
-                  <a
+                  <motion.a
                     key={social.name}
                     href={social.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className={`p-2 bg-gray-800 rounded-lg text-gray-400 ${social.color} transition-all duration-300 hover:bg-gray-700 hover:scale-110 hover:shadow-lg`}
-                    aria-label={`${social.name} do Clube Harmonia`}
+                    variants={socialIconVariants}
+                    whileHover="hover"
+                    className={`p-2.5 bg-appNeutral-grayDark/70 dark:bg-appNeutral-grayDarkest/50 text-appNeutral-grayMedium rounded-lg ${social.hoverColor} dark:${social.hoverColor?.replace('text-', 'text-appAccent-')}Light transition-colors duration-300`}
+                    aria-label={`${social.name} ${t('footer.clubName', 'Clube Harmonia')}`}
                   >
                     {social.icon}
-                  </a>
+                  </motion.a>
                 ))}
-=======
-            <h3 className="text-lg font-semibold mb-4">Contatos</h3>
-            <div className="space-y-3">
-              <div className="flex items-start">
-                <MapPin className="h-5 w-5 text-gray-400 mr-2 mt-0.5" />
-                <div className="text-gray-300 text-sm">
-                  Rua das Palmeiras, 245<br />
-                  Centro - São Paulo, SP
-                </div>
-              </div>
-              <div className="flex items-center">
-                <Phone className="h-5 w-5 text-gray-400 mr-2" />
-                <span className="text-gray-300 text-sm">(11) 3456-7890</span>
-              </div>
-              <div className="flex items-center">
-                <Mail className="h-5 w-5 text-gray-400 mr-2" />
-                <span className="text-gray-300 text-sm">contato@clubeharmonia.com.br</span>
->>>>>>> 5d3ae46afb28d48859273698052cf25058705ae0
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
-<<<<<<< HEAD
       </div>
 
       {/* Bottom Bar */}
-      <div className="border-t border-gray-700 bg-gray-900/50">
-        <div className="container mx-auto px-4 py-6">
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-            <div className="text-sm text-gray-400">
-              <p>&copy; {currentYear} Clube Harmonia. Todos os direitos reservados.</p>
+      <div className="border-t border-appNeutral-gray/20 dark:border-appNeutral-grayDark/50 bg-appNeutral-black/30 dark:bg-black/50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-5 lg:py-6">
+          <div className="flex flex-col md:flex-row justify-between items-center space-y-3 md:space-y-0">
+            <div className="text-xs text-appNeutral-grayMedium text-center md:text-left">
+              <p>&copy; {currentYear} {t('footer.clubName', 'Clube Harmonia')}. {t('footer.allRightsReserved', 'Todos os direitos reservados.')}</p>
             </div>
             
-            {/* Language Selector */}
-            <div className="flex items-center space-x-3">
-              <span className="text-sm text-gray-500">Idioma:</span>
-              <div className="flex space-x-2">
+            <div className="flex items-center space-x-2">
+              <span className="text-xs text-appNeutral-grayMedium">{t('footer.languageLabel', 'Idioma:')}</span>
+              <div className="flex space-x-1.5">
                 <Button 
-                  variant={i18n.language === 'pt' || i18n.language.startsWith('pt-') ? "secondary" : "ghost"} 
+                  variant={(i18n.language === 'pt' || i18n.language.startsWith('pt-')) ? "secondary" : "ghost"} 
                   size="sm"
                   onClick={() => changeLanguage('pt')} 
-                  className="text-xs h-8 px-3 bg-gray-800 hover:bg-gray-700 border-gray-600"
+                  className={`text-xs h-7 px-2.5 ${(i18n.language === 'pt' || i18n.language.startsWith('pt-')) ? 'bg-appNeutral-grayDark/50 dark:bg-appNeutral-gray/20' : 'hover:bg-appNeutral-grayDark/70 dark:hover:bg-appNeutral-gray/10'}`}
                 >
                   🇧🇷 PT
                 </Button>
                 <Button 
-                  variant={i18n.language === 'en' || i18n.language.startsWith('en-') ? "secondary" : "ghost"} 
+                  variant={(i18n.language === 'en' || i18n.language.startsWith('en-')) ? "secondary" : "ghost"} 
                   size="sm"
                   onClick={() => changeLanguage('en')} 
-                  className="text-xs h-8 px-3 bg-gray-800 hover:bg-gray-700 border-gray-600"
+                  className={`text-xs h-7 px-2.5 ${(i18n.language === 'en' || i18n.language.startsWith('en-')) ? 'bg-appNeutral-grayDark/50 dark:bg-appNeutral-gray/20' : 'hover:bg-appNeutral-grayDark/70 dark:hover:bg-appNeutral-gray/10'}`}
                 >
                   🇺🇸 EN
                 </Button>
               </div>
-=======
-
-        <div className="border-t border-gray-800 mt-8 pt-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              © 2025 Clube Harmonia. Todos os direitos reservados.
-            </p>
-            <div className="flex space-x-6 text-sm">
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">Política de Privacidade</a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">Termos de Uso</a>
-              <a href="#" className="text-gray-400 hover:text-white transition-colors">FAQ</a>
->>>>>>> 5d3ae46afb28d48859273698052cf25058705ae0
             </div>
           </div>
         </div>
       </div>
     </footer>
   );
-<<<<<<< HEAD
 });
 Footer.displayName = 'Footer';
-=======
-};
->>>>>>> 5d3ae46afb28d48859273698052cf25058705ae0
 
 export default Footer;
