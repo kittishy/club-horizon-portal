@@ -78,6 +78,10 @@ const Navbar: React.FC = React.memo(() => {
           <DropdownMenuContent align={isMobile ? 'start' : 'end'} className="w-56">
             <DropdownMenuLabel className="truncate">{t('auth.welcomeUser', { name: currentUser.name })}</DropdownMenuLabel>
             <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={() => { navigate('/perfil'); setIsMenuOpen(false); }} className="cursor-pointer">
+              <UserCircle className="mr-2 h-4 w-4" />
+              <span>{t('auth.myProfile')}</span>
+            </DropdownMenuItem>
             <DropdownMenuItem onClick={handleLogout} className="text-red-600 hover:!text-red-600 hover:!bg-red-50 focus:!bg-red-50 focus:!text-red-600 cursor-pointer">
               <LogOut className="mr-2 h-4 w-4" />
               <span>{t('auth.logoutButton')}</span>

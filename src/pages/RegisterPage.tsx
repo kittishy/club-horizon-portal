@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useRegister } from '@/hooks/auth';
 import { useAuth } from '@/contexts/AuthContext';
@@ -7,22 +7,28 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
-import { AlertCircle, UserPlus } from 'lucide-react';
+import { UserPlus } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { RegisterSchema, RegisterFormData } from '@/lib/validators';
+import { toast } from 'sonner';
 
 const RegisterPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { mutate: register, isLoading, isError, error, isSuccess } = useRegister();
+  const { mutate: registerUser, isLoading, isError, error: apiError, isSuccess, reset } = useRegister();
   const { currentUser, isLoading: authLoading } = useAuth();
 
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [formError, setFormError] = useState<string | null>(null);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setError
+  } = useForm<RegisterFormData>({
+    resolver: zodResolver(RegisterSchema),
+  });
 
   useEffect(() => {
-    // Se já estiver logado, redireciona para home
     if (!authLoading && currentUser) {
       navigate('/');
     }
@@ -30,24 +36,32 @@ const RegisterPage: React.FC = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      // Após registro bem-sucedido, mostra mensagem e redireciona para login
-      // Poderia adicionar um toast aqui
-      alert(t('auth.registrationSuccess')); 
+      toast.success(t('auth.registrationSuccess'));
       navigate('/login');
     }
-  }, [isSuccess, navigate, t]);
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setFormError(null); // Limpa erros anteriores
-    if (password !== confirmPassword) {
-      setFormError(t('auth.passwordMismatch'));
-      return;
+    if (isError && apiError) {
+      const errorMessage = apiError instanceof Error ? apiError.message : 'Unknown error';
+      // Se for um erro de email já em uso, podemos tentar traduzir a mensagem específica se existir
+      // ou mostrar um erro genérico no campo de email.
+      // Para simplificar, usaremos um toast geral.
+      toast.error(t('auth.registrationError'), {
+        description: t(errorMessage) || errorMessage, 
+      });
+      // Se o erro for sobre o email, você pode querer marcá-lo no formulário também:
+      if (errorMessage.toLowerCase().includes('email')) {
+        setError('email', { type: 'manual', message: t(errorMessage) || errorMessage });
+      }
+      reset();
     }
-    register({ name, email, password });
+  }, [isSuccess, navigate, t, isError, apiError, reset, setError]);
+
+  const onSubmit = (data: RegisterFormData) => {
+    // A validação de confirmação de senha já é feita pelo Zod.
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { confirmPassword, ...registrationData } = data;
+    registerUser(registrationData);
   };
 
-  // Não renderiza o formulário se o usuário já estiver logado
   if (authLoading || currentUser) {
     return null; 
   }
@@ -61,17 +75,17 @@ const RegisterPage: React.FC = () => {
           <CardDescription>{t('home.joinUsLink')}</CardDescription> 
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
             <div className="space-y-1.5">
               <Label htmlFor="name">{t('contactPage.form.nameLabel')}</Label>
               <Input
                 id="name"
                 type="text"
                 placeholder={t('contactPage.form.namePlaceholder')}
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
+                {...register('name')}
+                className={errors.name ? "border-red-500" : ""}
               />
+              {errors.name && <p className="text-xs text-red-600">{t(errors.name.message as string)}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="email">{t('auth.emailLabel')}</Label>
@@ -79,10 +93,10 @@ const RegisterPage: React.FC = () => {
                 id="email"
                 type="email"
                 placeholder={t('auth.emailPlaceholder')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
+                {...register('email')}
+                className={errors.email ? "border-red-500" : ""}
               />
+              {errors.email && <p className="text-xs text-red-600">{t(errors.email.message as string)}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="password">{t('auth.passwordLabel')}</Label>
@@ -90,10 +104,10 @@ const RegisterPage: React.FC = () => {
                 id="password"
                 type="password"
                 placeholder={t('auth.passwordPlaceholder')}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
+                {...register('password')}
+                className={errors.password ? "border-red-500" : ""}
               />
+              {errors.password && <p className="text-xs text-red-600">{t(errors.password.message as string)}</p>}
             </div>
             <div className="space-y-1.5">
               <Label htmlFor="confirm-password">{t('auth.confirmPasswordLabel')}</Label>
@@ -101,21 +115,13 @@ const RegisterPage: React.FC = () => {
                 id="confirm-password"
                 type="password"
                 placeholder={t('auth.confirmPasswordPlaceholder')}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-                required
+                {...register('confirmPassword')}
+                className={errors.confirmPassword ? "border-red-500" : ""}
               />
+              {errors.confirmPassword && <p className="text-xs text-red-600">{t(errors.confirmPassword.message as string)}</p>}
             </div>
             
-            {(isError && error || formError) && (
-              <div className="flex items-center text-sm text-red-600 bg-red-100 p-3 rounded-md">
-                <AlertCircle className="h-5 w-5 mr-2" />
-                <span>
-                  {formError ? formError : t('auth.registrationError')}
-                  {isError && error instanceof Error ? ` (${error.message})` : ''}
-                </span>
-              </div>
-            )}
+            {/* Removido o display de erro da API/formulário daqui, pois será tratado pelo toast e erros de campo */}
 
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2.5" disabled={isLoading}>
               {isLoading ? t('Loading...') : t('auth.registerButton')}

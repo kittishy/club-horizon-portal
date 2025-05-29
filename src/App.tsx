@@ -5,6 +5,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Layout from "./components/Layout";
 import PageLoader from './components/PageLoader';
+import ProtectedRoute from './components/ProtectedRoute';
 
 // Lazy load dos componentes de página com os nomes de arquivo corretos
 const Home = lazy(() => import("./pages/Home"));
@@ -16,6 +17,7 @@ const NewsDetailPage = lazy(() => import("./pages/NewsDetailPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const LoginPage = lazy(() => import("./pages/LoginPage"));
 const RegisterPage = lazy(() => import("./pages/RegisterPage"));
+const UserProfilePage = lazy(() => import('./pages/UserProfilePage'));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const App = () => (
@@ -33,6 +35,9 @@ const App = () => (
             <Route path="noticias" element={<NewsPage />} />
             <Route path="noticias/:newsId" element={<NewsDetailPage />} />
             <Route path="contato" element={<ContactPage />} />
+            <Route element={<ProtectedRoute />}>
+              <Route path="perfil" element={<UserProfilePage />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="/login" element={<LoginPage />} />

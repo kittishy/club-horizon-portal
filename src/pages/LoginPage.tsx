@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useLogin } from '@/hooks/auth';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -8,38 +8,54 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useTranslation } from 'react-i18next';
 import { AlertCircle, LogIn } from 'lucide-react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginSchema, LoginFormData } from '@/lib/validators';
+import { toast } from 'sonner';
 
 const LoginPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { mutate: login, isLoading, isError, error, isSuccess } = useLogin();
+  const location = useLocation();
+  const { mutate: loginUser, isLoading, isError, error: apiError, isSuccess, reset } = useLogin();
   const { currentUser, isLoading: authLoading } = useAuth();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const from = location.state?.from?.pathname || '/';
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(LoginSchema),
+  });
 
   useEffect(() => {
-    // Se já estiver logado e o estado de autenticação não estiver carregando, redireciona para home
     if (!authLoading && currentUser) {
-      navigate('/');
+      navigate(from, { replace: true });
     }
-  }, [currentUser, authLoading, navigate]);
+  }, [currentUser, authLoading, navigate, from]);
 
   useEffect(() => {
     if (isSuccess && currentUser) {
-      // Navega para a home após login bem sucedido, pode ser para o perfil ou dashboard
-      navigate('/');
+      toast.success(t('auth.loginSuccess'));
+      navigate(from, { replace: true });
     }
-  }, [isSuccess, currentUser, navigate]);
+    if (isError && apiError) {
+        const errorMessage = apiError instanceof Error ? apiError.message : 'Unknown error';
+        toast.error(t('auth.loginError'), {
+            description: t(errorMessage) || errorMessage,
+        });
+        reset();
+    }
+  }, [isSuccess, currentUser, navigate, from, isError, apiError, t, reset]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    login({ email, password });
+  const onSubmit = (data: LoginFormData) => {
+    loginUser(data);
   };
 
-  // Não renderiza o formulário se o usuário já estiver logado e a autenticação carregada
   if (authLoading || currentUser) {
-    return null; // Ou um loader, ou redirecionamento direto
+    return null; 
   }
 
   return (
@@ -51,18 +67,17 @@ const LoginPage: React.FC = () => {
           <CardDescription>{t('home.welcome')}</CardDescription> 
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email">{t('auth.emailLabel')}</Label>
               <Input
                 id="email"
                 type="email"
                 placeholder={t('auth.emailPlaceholder')}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                required
-                className="focus:ring-blue-500 focus:border-blue-500"
+                {...register('email')}
+                className={errors.email ? "border-red-500" : ""}
               />
+              {errors.email && <p className="text-xs text-red-600">{t(errors.email.message as string)}</p>}
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">{t('auth.passwordLabel')}</Label>
@@ -70,18 +85,11 @@ const LoginPage: React.FC = () => {
                 id="password"
                 type="password"
                 placeholder={t('auth.passwordPlaceholder')}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                className="focus:ring-blue-500 focus:border-blue-500"
+                {...register('password')}
+                className={errors.password ? "border-red-500" : ""}
               />
+              {errors.password && <p className="text-xs text-red-600">{t(errors.password.message as string)}</p>}
             </div>
-            {isError && error && (
-              <div className="flex items-center text-sm text-red-600 bg-red-100 p-3 rounded-md">
-                <AlertCircle className="h-5 w-5 mr-2" />
-                <span>{t('auth.loginError')} {error instanceof Error ? `(${error.message})` : ''}</span>
-              </div>
-            )}
             <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3" disabled={isLoading}>
               {isLoading ? t('Loading...') : t('auth.loginButton')}
             </Button>

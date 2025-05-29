@@ -159,7 +159,10 @@ const resources = {
       "validation.email.invalid": "Please enter a valid email address.",
       "validation.subject.required": "Subject is required.",
       "validation.message.required": "Message is required.",
-      "validation.message.minLength": "Message must be at least {{count}} characters long.", // Exemplo com interpolação
+      "validation.message.minLength": "Message must be at least {{count}} characters long.",
+      "validation.password.required": "Password is required.",
+      "validation.password.minLength:6": "Password must be at least 6 characters long.",
+      "validation.confirmPassword.required": "Confirm password is required.",
 
       // Error messages for data fetching
       "error.genericTitle": "An Error Occurred",
@@ -403,6 +406,9 @@ const resources = {
       "validation.subject.required": "O assunto é obrigatório.",
       "validation.message.required": "A mensagem é obrigatória.",
       "validation.message.minLength": "A mensagem deve ter pelo menos {{count}} caracteres.",
+      "validation.password.required": "A senha é obrigatória.",
+      "validation.password.minLength:6": "A senha deve ter pelo menos 6 caracteres.",
+      "validation.confirmPassword.required": "A confirmação da senha é obrigatória.",
 
       // Error messages for data fetching
       "error.genericTitle": "Ocorreu um Erro",
